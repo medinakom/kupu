@@ -1,0 +1,107 @@
+[
+    {
+        "key": "websiteName",
+        "value": "Lorem Ipsum",
+        "remarks": "Nama Website"
+    },
+    {
+        "key": "firstSlogan",
+        "value": "Dolor Sit Amet",
+        "remarks": "First Line Slogan"
+    },
+    {
+        "key": "secondSlogan",
+        "value": "Consectetur Adipiscing Elit",
+        "remarks": "Second Line Slogan"
+    },
+    {
+        "key": "islive",
+        "value": "false",
+        "remarks": "Is live"
+    },
+    {
+        "key": "videoDir",
+        "value": "/tmp/video",
+        "remarks": "Direktori video"
+    },
+    {
+        "key": "audioDir",
+        "value": "/tmp/audio",
+        "remarks": "Direktori audio"
+    },
+    {
+        "key": "radioUrl",
+        "value": "https://radmin.binhambal.org/listen/binhambal/radio.mp3",
+        "remarks": "URL Radio"
+    },
+    {
+        "key": "tmpVideo",
+        "value": "/tmp/tmp_video",
+        "remarks": "Direktori temporer (video)"
+    },
+    {
+        "key": "tmpAudio",
+        "value": "/tmp/tmp_audio",
+        "remarks": "Direktori temporer (audio)"
+    },
+    {
+        "key": "autoloadDir",
+        "value": "/tmp/autoload",
+        "remarks": "Direktori autoload"
+    },
+    {
+        "key": "newestContentSize",
+        "value": "10",
+        "remarks": "Jumlah konten terbaru yg ditampilkan"
+    },
+    {
+        "key": "categoryPageSize",
+        "value": "10",
+        "remarks": "Ukuran paging daftar kajian di halaman kategori"
+    },
+    {
+        "key": "videoPageSize",
+        "value": "10",
+        "remarks": "Ukuran paging daftar video di halaman video"
+    },
+    {
+        "key": "terpentingSize",
+        "value": "10",
+        "remarks": "Jumlah kajian terpenting yg ditampilkan"
+    },
+    {
+        "key": "liveStreamingUnlistedAddress",
+        "value": "http://s1.example.com/hls/stream.m3u8",
+        "remarks": "Alamat kajian live unlisted"
+    },
+    {
+        "key": "liveStreamingUnlistedChatAddress",
+        "value": "http://s1.example.com/embed/chat/readwrite",
+        "remarks": "Alamat kajian live unlisted"
+    },
+    {
+        "key": "liveStreamingAddress",
+        "value": "http://s2.example.com/hls/stream.m3u8",
+        "remarks": "Alamat kajian live publik"
+    },
+    {
+        "key": "liveStreamingChatAddress",
+        "value": "http://s2.example.com/embed/chat/readwrite",
+        "remarks": "Alamat kajian live publik"
+    },
+    {
+        "key": "liveStreamingTitle",
+        "value": "Kajian Live",
+        "remarks": "Judul kajian live"
+    },
+    {
+        "key": "liveStreamingUstadz",
+        "value": "Ustadz Live",
+        "remarks": "Pemateri kajian live"
+    },
+    {
+        "key": "ytCookies",
+        "value": "/home/aphasan/Applications/cookies.txt",
+        "remarks": "Lokasi Youtube Cookies untuk Youtube Downloader"
+    }
+]

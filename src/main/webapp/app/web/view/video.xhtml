@@ -1,0 +1,112 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets" 
+                xmlns:p="primefaces"
+                xmlns:pe="primefaces.extensions"
+                template="/WEB-INF/templates/child-frontpage.xhtml">
+    <f:metadata>
+        <f:view transient="true" />
+        <ui:param name="brand" value="#{config.getString('web.websiteName')}" />
+        <ui:param name="description" value="#{config.getString('web.firstSlogan')} #{config.getString('web.secondSlogan')}" />
+        <f:viewParam name="k" value="#{videoPage.kajian}" converter="KajianConverter" transient="true" />
+        <f:viewParam name="v" value="#{videoPage.videoKajian}" converter="VideoKajianConverter" transient="true" />
+    </f:metadata>
+    <ui:define name="title">Video</ui:define>
+    <ui:define name="stylesheet">
+        <h:outputStylesheet library="css" name="video-js.css" />
+        <h:outputStylesheet library="css" name="plyr.css" />
+    </ui:define>
+
+    <ui:define name="content">
+
+        <style>
+
+            .ui-accordion-header {
+                margin-top: .5rem!important;
+                background-color: white!important;
+                border-top: none!important;
+                border-left: none!important;
+                border-right: none!important;
+                border-radius: 1em;
+            }
+            .ui-accordion-content {
+                padding: 0!important;
+            }
+        </style>
+
+        <div class="row">
+            <div class="col-lg-8 p-lg-2 p-2 mb-2">                
+                <ui:include src="/WEB-INF/components/app/web/view/player.xhtml">
+                    <ui:param name="video" value="#{videoPage.videoKajian}" />
+                </ui:include>
+                <div class="card my-2 surface">
+                    <div class="card-header border-bottom-0 text-center">
+                        <span class="fw-bold primary-text fs-4">Audio Kajian</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <ui:include src="/WEB-INF/components/app/web/view/audioplayer.xhtml">
+                            <ui:param name="video" value="#{videoPage.videoKajian}" />
+                            <ui:param name="id" value="audiopreview" />
+                        </ui:include>
+                    </div>
+                </div>
+                <div class="card" >
+                    <div class="card-header border-bottom-0 text-center" style="background-color: var(--md-ref-palette-primary90)">
+                        <span class="fw-bold primary-text fs-4">Kitab Kajian</span>
+                    </div>
+                    <div class="card-body p-2" style="background-color: var(--md-ref-palette-primary90)">
+                        <p:accordionPanel value="#{videoPage.kitab}" var="kitab" activeIndex="-1" >
+                            <p:tab title="#{kitab.title}" class="mb-2">
+                                <pe:documentViewer height="500"  url="/api/videokajian/kitab/#{kitab.id}" zoom="page-width" />
+                            </p:tab>
+                        </p:accordionPanel>
+                    </div>
+                </div>
+            </div>
+            <h:form prependId="false" id="content" class="d-block col-lg-4 p-lg-2 p-2 d-flex flex-column">
+                <div class="card mb-4" style="background-color: var(--md-ref-palette-tertiary50)">
+                    <div class="card-header bg-transparent border-bottom-0 text-center" >
+                        <span class="fw-bold surface-text fs-4">Daftar Video</span>
+                    </div>
+                    <div class="card-body p-2">
+                        <ul class="list-group">
+                            <ui:repeat value="#{videoPage.videos}" var="video" >
+                                <li class="list-group-item list-group-item-action border-0 mb-2" style="color: #001945;background-color: #e1e2ec!important; border-bottom: thin solid #c9c7bf!important"> 
+                                    <ui:include src="/WEB-INF/components/app/web/view/card-video-v.xhtml">
+                                        <ui:param name="kajian" value="#{videoPage.kajian}" />
+                                        <ui:param name="video" value="#{video}" />
+                                    </ui:include>
+                                </li>
+                            </ui:repeat>
+                        </ul>
+                        <div class="d-block d-flex bg-transparent justify-content-end py-2 px-3">
+                            <h:inputHidden id="kajian" value="#{videoPage.kajian}" converter="KajianConverter" />
+                            <h:inputHidden id="video" value="#{videoPage.videoKajian}" converter="VideoKajianConverter" />
+                            <h:inputHidden id="page-size" value="#{videoPage.pageSize}" />
+                            <p:commandLink class="text-decoration-none" style="color: #d9e2ff"
+                                           value="Muat lebih banyak..." 
+                                           actionListener="#{videoPage.incPageSize}" immediate="true"
+                                           onclick="incPageSize()" update="@form" />
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </div>
+    </ui:define>
+
+    <ui:define name="script">
+        <h:outputScript library="js" name="video.js" />
+        <h:outputScript library="js" name="videojs-http-streaming.js" />
+        <script>
+            var player = videojs('video_id');
+
+            function incPageSize() {
+                var pageSize = document.getElementById('page-size').value * 1;
+                pageSize += 10;
+                document.getElementById('page-size').value = pageSize;
+            }
+        </script>
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:ui="jakarta.faces.facelets" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+
+    <div class="filter-field">
+        <p:outputLabel for="kajian" value="Kajian" />
+        <p:selectOneMenu id="kajian" value="#{filter.content.kajian}"
+                         converter="KajianConverter" >                        
+            <f:selectItem itemLabel="Semua" itemValue="#{null}" />
+            <f:selectItems value="#{kajianSelectList.fetchedItems}" var="item"
+                           itemLabel="#{item.title}" itemValue="#{item}" />
+        </p:selectOneMenu>                  
+    </div>
+
+    <div class="filter-field">
+        <p:outputLabel for="ustadz" value="Ustadz" />
+        <p:selectOneMenu id="ustadz" value="#{filter.content.ustadz}"
+                         converter="UstadzConverter" >                        
+            <f:selectItem itemLabel="Semua" itemValue="#{null}" />
+            <f:selectItems value="#{ustadzSelectList.fetchedItems}" var="item"
+                           itemLabel="#{item.name}" itemValue="#{item}" />
+        </p:selectOneMenu>                  
+    </div>
+
+</ui:composition>
+

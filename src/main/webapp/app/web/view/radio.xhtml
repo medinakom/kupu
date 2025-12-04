@@ -1,0 +1,16 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets" >
+
+    <div class="row p-2">
+        <div class="col-lg-8 p-lg-2 p-0" style="height: 300px">
+            <ui:include src="/WEB-INF/components/app/web/view/radio.xhtml" />
+        </div>
+        <div class="col-lg-4 p-lg-2 p-0">
+            <ui:include src="/WEB-INF/components/app/web/list/kajian-terpenting.xhtml" />
+            <ui:include src="/WEB-INF/components/app/web/list/kajian-terbaru.xhtml" />
+        </div>
+    </div>
+
+</ui:composition>
+

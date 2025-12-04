@@ -1,0 +1,8 @@
+<ui:composition xmlns:ui="jakarta.faces.facelets" 
+                xmlns:f="jakarta.faces.core">             
+    
+    <f:viewParam name="k" value="#{filter.content.kajian}" converter="KajianConverter" transient="true" />
+    <f:viewParam name="u" value="#{filter.content.ustadz}" converter="UstadzConverter" transient="true" />
+
+</ui:composition>
+

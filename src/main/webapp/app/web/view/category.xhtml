@@ -1,0 +1,14 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/WEB-INF/templates/category-page.xhtml"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets" > 
+
+    <f:metadata>
+        <ui:param name="brand" value="#{config.getString('application.websiteName')}" />
+        <ui:param name="description" value="#{config.getString('application.firstSlogan')}" />
+        <f:viewParam name="c" value="#{page.activeCategoryId}" />
+    </f:metadata>
+   
+    
+</ui:composition>
+

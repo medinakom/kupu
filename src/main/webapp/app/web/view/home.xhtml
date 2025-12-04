@@ -1,0 +1,20 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets" >
+
+    <div class="row">
+        <div class="col-12 p-lg-2 p-2">
+            <ui:include src="/WEB-INF/components/app/web/view/about.xhtml" />
+        </div>
+        <div class="col-lg-8 p-lg-2 p-2">
+            <ui:include src="/WEB-INF/components/app/web/list/kajian-terbaru.xhtml" />
+            <ui:include src="/WEB-INF/components/app/web/list/kajian-asatidz.xhtml" />
+        </div>
+        <div class="col-lg-4 p-lg-2 p-2">
+            <ui:include src="/WEB-INF/components/app/web/list/kajian-terpenting.xhtml" />
+            <ui:include src="/WEB-INF/components/app/web/list/kitab-kajian.xhtml" />
+        </div>
+    </div>
+
+</ui:composition>
+

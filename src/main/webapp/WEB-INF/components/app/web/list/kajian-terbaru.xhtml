@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+                xmlns:h="http://xmlns.jcp.org/jsf/html" >
+
+    <div class="card mb-4 primary-container" style="background-color: var(--md-ref-palette-primary95)">
+        <div class="card-header bg-transparent border-bottom-0 text-center" >
+            <span class="fw-bold primary-text fs-4">Kajian Terbaru</span>
+        </div>
+        <div class="card-body p-2">
+            <h:form>
+                <ul class="list-group">   
+                    <ui:repeat value="#{kajianRetriever.terbaru}" var="kajian">
+                        <li class="list-group-item list-group-item-action border-0 mb-2"> 
+                            <ui:include src="/WEB-INF/components/app/web/view/card-kajian-v.xhtml">
+                                <ui:param name="kajian" value="#{kajian}" />
+                                <ui:param name="video" value="#{kajianRetriever.getFirstVideo(kajian)}" />
+                            </ui:include>
+                        </li>
+                    </ui:repeat>
+                </ul>
+            </h:form>
+        </div>
+    </div>
+</ui:composition>
+

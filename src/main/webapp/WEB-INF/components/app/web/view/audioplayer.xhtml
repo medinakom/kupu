@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    
+
+    <div class="card border-0 mt-0 #{video eq null ? 'd-none' : 'bg-transparent'}">
+        <style>
+            .plyr__controls {box-shadow: none!important; border: none!important;}
+        </style>
+        <div class="card-body bg-transparent">
+            <audio id="#{id ne null ? id : 'video_id'}"
+                      controls="true" preload="true" />
+            <ui:insert name="audiojs">
+                <h:outputScript library="js" name="plyr.js" />
+                <h:outputScript library="js" name="hls.js" />
+            </ui:insert>
+            <script>
+                (function () {
+                    var audio = document.querySelector('##{id}');
+
+                    if (Hls.isSupported()) {
+                        var hls = new Hls();
+                        
+                        hls.loadSource('/api/audiokajian/#{video}/stream');
+                        hls.attachMedia(audio);
+                    }
+  
+                    plyr.setup(audio);
+                })();
+            </script>
+        </div>
+    </div>
+
+</ui:composition>
+

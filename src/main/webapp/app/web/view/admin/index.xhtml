@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/WEB-INF/templates/explorer.xhtml"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces">
+
+    <f:metadata>        
+        <ui:param name="title" value="Kajian" />
+
+        <ui:param name="viewPage" value="#{kajianAdminPage}" /> 
+        <ui:include src="/WEB-INF/components/core/base/meta/page.xhtml"/>
+
+        <ui:param name="masterTitle" value="Kajian" />          
+        <ui:param name="master_notool" value="true" />       
+        <ui:param name="masterDataView" value="#{viewPage.kajianList}" />        
+        <ui:param name="masterContentId" value=":master-frm:#{masterDataView.name}" />         
+        <f:viewParam name="ms" value="#{masterDataView.selectionInternal}" converter="KajianConverter" transient="true" />
+
+        <ui:param name="masterFilter" value="#{masterDataView.filter}" />
+        <ui:param name="masterFilterType" value="overlay" />
+        <ui:param name="masterFilterUi" value="/WEB-INF/components/core/common/common-filterui.xhtml" /> 
+        <ui:include src="/WEB-INF/components/core/common/meta/common-filterui.xhtml" >
+            <ui:param name="filter" value="#{masterFilter}" />
+        </ui:include>
+        <ui:param name="masterPager" value="#{masterDataView.pager}" />
+        <f:viewParam name="mp" value="#{masterPager.pageSize}" converter="LongConverter" transient="true" />
+        <f:viewParam name="mo" value="#{masterPager.offset}" converter="LongConverter" transient="true" /> 
+
+        <ui:param name="detailTitle" value="Video" />
+        <ui:param name="detail_notool" value="true" />
+        <ui:param name="detailDataView" value="#{viewPage.videoList}" />
+        <ui:param name="detailContentId" value=":detail-frm:#{detailDataView.name}" />
+        <f:viewParam name="ds" value="#{detailDataView.selectionInternal}" converter="VideoKajianConverter" transient="true" />
+
+        <ui:param name="detailSorter" value="#{detailDataView.sorter}" />
+
+        <ui:param name="detailFilter" value="#{detailDataView.filter}" />
+        <ui:param name="detailFilterType" value="overlay" />
+        <ui:param name="detailFilterUi" value="/WEB-INF/components/app/web/filter/videokajian-filterui.xhtml" /> 
+        <ui:include src="/WEB-INF/components/app/web/filter/meta/videokajian-filterui.xhtml" >
+            <ui:param name="filter" value="#{detailFilter}" />
+        </ui:include>    
+
+        <ui:param name="detailPager" value="#{detailDataView.pager}" />
+        <f:viewParam name="dp" value="#{detailPager.pageSize}" converter="LongConverter" transient="true" />
+        <f:viewParam name="do" value="#{detailPager.offset}" converter="LongConverter" transient="true" />    
+
+    </f:metadata>
+
+    <ui:define name="parent-nav">
+        <p:commandButton action="#{webNavigator.open('Home', '')}" class="ui-button-flat"
+                         immediate="true" ajax="false" icon="pi pi-home" />
+    </ui:define>
+
+    <ui:define name="module-menu">
+        <ui:include src="/WEB-INF/components/app/web/module-menu.xhtml" />
+    </ui:define>
+
+    <ui:define name="master">
+        <h:form id="master-frm">
+            <ui:decorate template="/WEB-INF/components/app/web/list/kajianlist.xhtml" >
+                <ui:param name="dataView" value="#{masterDataView}" />                
+                <ui:param name="selectCallback" value="refreshMasterCasing();refreshDetail()" />
+                <ui:param name="updateCallback" value="refreshMaster(); refreshDetail()" />
+                <ui:param name="tableStyle" value="noheader" />
+            </ui:decorate>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="detail-top-tools">
+        <p:selectBooleanButton offIcon="pi pi-volume-up"  onIcon="pi pi-volume-up" 
+                               immediate="true" title="Public Live"                                                  
+                               disabled="#{detailDataView.selected eq null}"
+                               value="#{detailDataView.selected.publicLive}"
+                               class="ui-button-flat ui-button-primary" >
+            <p:ajax event="change" listener="#{kajianAdminPage.onTogglePublicLive}" oncomplete="refreshDetailContent()" />
+        </p:selectBooleanButton>
+        <p:selectBooleanButton offIcon="pi pi-volume-off"  onIcon="pi pi-volume-off" 
+                               immediate="true" title="Unlisted Live"                                                 
+                               disabled="#{detailDataView.selected eq null}"
+                               value="#{detailDataView.selected.live}"
+                               class="ui-button-flat" >
+            <p:ajax event="change" listener="#{kajianAdminPage.onToggleLive}" oncomplete="refreshDetailContent()" />
+        </p:selectBooleanButton>
+    </ui:define>
+
+    <ui:define name="detail">
+        <h:form id="detail-frm">
+            <ui:decorate template="/WEB-INF/components/core/base/table.xhtml" >
+                <ui:param name="dataView" value="#{detailDataView}" />
+                <ui:param name="selectCallback" value="refreshDetailCasing()" />
+
+                <ui:define name="columns">
+
+                    <p:column headerText="Judul">
+                        <h:outputText value="#{data.notes}" class="font-bold #{data.published ? 'text-green-500' : 'text-color-secondary'}" />
+                    </p:column>
+
+                    <p:column headerText="Live" class="text-center">
+                        <i class="pi pi-video #{(data.live || data.publicLive) ? 'text-red-500' : 'hidden'}" />
+                        <p:link href="#{kajianAdminPage.unlistedLink}" rendered="#{data.live}" >
+                            <i class="pi pi-link #{data.live ? 'text-red-500' : 'hidden'}" />
+                        </p:link>
+                    </p:column>
+
+                    <p:column headerText="Edit" class="text-center">
+                        <p:commandLink action="#{kajianAdminPage.goToVideoEditor(data)}" immediate="true" >
+                            <i class="pi pi-arrow-right font-bold #{data.published ? 'text-green-500' : 'text-color-secondary'}" />
+                        </p:commandLink>
+                    </p:column>
+
+                </ui:define>
+
+            </ui:decorate>
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>

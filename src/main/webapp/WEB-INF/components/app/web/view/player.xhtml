@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces">
+
+    <div class="card #{video eq null ? 'd-none' : ''}">
+        <div class="card-header ratio ratio-16x9 border-0" style="position:relative;">
+            <video-js id="#{id ne null ? id : 'video_id'}" class="vjs-lo-skin"
+                      style="position:absolute; top:0;" controls="true" autoplay="false"
+                      preload="metadata">
+                <source src="/api/videokajian/#{video}/stream" type="application/x-mpegURL" />
+            </video-js>
+        </div>
+        <div class="card-body p-2 surface">
+            <div class="card-title">
+                <h:outputText class="h5" value="#{video.kajian.title} - #{video.notes}" />
+            </div>
+            <div class="card-text">
+                <div class="d-flex flex-column">
+                    <h:outputText class="fs-6" value="Ustadz #{video.kajian.ustadz.fullname}" />
+                    <h:outputText class="small" value="#{video.eventTime}" >
+                        <f:convertDateTime type="localDateTime" pattern="d MMMM yyyy" />
+                    </h:outputText>
+                    <div class="d-flex gap-2 justify-content-end">
+                        <h:outputText class="small" value="Dilihat: #{video.visitorCount}" />
+                        <span class="small">Online: <span id="online" >0</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var videoId = "#{video.id}";
+        var ws = new WebSocket("wss://" + window.location.host + "#{request.contextPath}/viewer/" + videoId);
+
+        ws.onmessage = function (event) {
+            document.getElementById('online').innerText = event.data;
+        };
+
+        window.addEventListener("beforeunload", function () {
+            ws.close();
+        });
+    </script>
+
+</ui:composition>
+

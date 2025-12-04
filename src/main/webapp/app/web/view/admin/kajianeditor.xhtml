@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/WEB-INF/templates/editor-page.xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="primefaces">
+
+    <f:metadata>
+        <ui:param name="primaryTitle" value="Editor Kajian" />
+        <ui:param name="viewPage" value="#{kajianEditorPage}" /> 
+        <ui:include src="/WEB-INF/components/core/base/meta/page.xhtml"/>
+
+        <ui:param name="notool" value="true" />
+        <ui:param name="nofilter" value="true"/>          
+
+        <f:viewParam name="entity" value="#{viewPage.entity}" converter="KajianConverter" transient="true" />
+
+        <f:viewAction action="#{viewPage.load}" />
+    </f:metadata>
+
+    <ui:define name="module-menu">
+        <ui:include src="/WEB-INF/components/app/web/module-menu.xhtml" />
+    </ui:define>
+
+    <ui:define name="content-header" />
+
+    <ui:define name="form">
+
+        <div class="grid w-full p-3">
+            <div class="col-12 md:col-6">
+                
+                <div class="field ui-fluid">
+                    <p:outputLabel for="title" value="Judul" />
+                    <p:inputText id="title" class="block w-100" required="true"
+                                 value="#{viewPage.entity.title}" />
+                </div>
+
+                <div class="field ui-fluid">
+                    <p:outputLabel for="notes" value="Keterangan" />
+                    <p:inputTextarea id="notes" class="w-100"
+                                     value="#{viewPage.entity.description}" />
+                </div>
+            
+
+                <div class="field ui-fluid">
+                    <p:outputLabel for="ustadz" value="Ustadz" />
+                    <p:selectOneMenu id="ustadz" class="w-100" required="true"
+                                     value="#{viewPage.entity.ustadz}"
+                                     converter="UstadzConverter" hideNoSelectionOption="false" >
+                        <f:selectItem noSelectionOption="true" itemLabel="Pilih Ustadz" itemValue="#{null}" />
+                        <f:selectItems value="#{ustadzSelectList.fetchedItems}"
+                                       var="ustadz" itemLabel="#{ustadz.fullname}"
+                                       itemValue="#{ustadz}" />
+                    </p:selectOneMenu>
+                </div>
+
+                <div class="field ui-fluid">
+                    <p:outputLabel for="category" value="Kategori" />
+                    <p:selectOneMenu id="category" class="w-100" required="true"
+                                     value="#{viewPage.entity.contentCategory}"
+                                     converter="ContentCategoryConverter" >
+                        <f:selectItem noSelectionOption="true" itemLabel="Pilih Kategori" itemValue="#{null}" />
+                        <f:selectItems value="#{contentCategoryList.fetchedItems}"
+                                       var="category" itemLabel="#{category.name}"
+                                       itemValue="#{category}" />
+                    </p:selectOneMenu>
+                </div>
+            
+                <div class="field ui-fluid">
+                    <p:outputLabel for="tags" value="Tags" />
+                    <p:selectCheckboxMenu id="tags" class="block inputfield w-100"
+                                          multiple="true" converter="TagConverter"
+                                          value="#{viewPage.entity.tags}" >
+                        <f:selectItems value="#{tagSelectList.fetchedItems}" />
+                    </p:selectCheckboxMenu>
+                </div>
+
+                <div class="field ui-fluid">
+                    <p:toggleSwitch id="published" value="#{viewPage.entity.published}"/>
+                    <p:outputLabel for="published" value="Published"  class="ml-2"/>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

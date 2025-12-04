@@ -1,0 +1,13 @@
+<ui:composition xmlns:ui="jakarta.faces.facelets" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+
+    <p:menuitem value="Editor Kajian" immediate="true"
+                actionListener="#{webNavigator.open('Home', '')}"
+                icon="pi pi-video" /> 
+    <p:menuitem value="Konfigurasi" immediate="true"
+                actionListener="#{webNavigator.open('Konfigurasi', '')}"
+                icon="pi pi-cog" />
+</ui:composition>
+

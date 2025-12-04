@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:p="http://primefaces.org/ui">
+
+    <div class="container-fluid flex-column" style="background-color:#795900!important">
+        <style>
+            #running-text {
+                transform: translateX(100%);
+                animation:  move 25s linear infinite;
+            }
+            @keyframes move {
+                to {
+                    transform: translateX(-100%);
+                }
+            }
+        </style>
+
+        <div class="text-nowrap text-light overflow-hidden align-self-lg-stretch py-1">
+            <span id="running-text" class="d-block w-100">
+                #{config.getString('application.firstSlogan')}
+                #{config.getString('application.secondSlogan')}
+            </span>
+        </div>
+    </div>
+
+</ui:composition>
+

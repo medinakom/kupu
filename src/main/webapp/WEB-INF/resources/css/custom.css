@@ -1,0 +1,83 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Apr 4, 2020, 2:54:18 PM
+    Author     : aphasan
+*/
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+html,body {
+    height: 100%;
+}
+/*.ui-datatable-sticky {position: relative!important;}*/
+/*.ui-datatable .ui-datatable-sticky:not(.ui-sticky) {
+    display: none!important;
+}
+.ui-datatable .ui-datatable-sticky.ui-sticky {
+    top: 6.5em!important;
+    left: 0;
+    width: auto!important;
+    position: absolute!important;
+}
+
+*/.ui-datatable .ui-datatable-sticky.ui-sticky.ui-shadow {
+    moz-box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+    box-shadow: none!important;
+}
+.ui-datatable-sticky {
+    top: 0!important;
+    left: 0!important;
+    width: auto!important;
+    position: sticky!important;
+    z-index: 1001!important;
+}
+/*.ui-datatable-sticky.ui-sticky {
+    top: 92px!important;
+}*/
+.ui-datatable-tablewrapper thead {
+    /*display: none!important;*/
+}
+.ui-treenode-content {
+    display: block!important;
+}
+.ui-treenode-leaf-icon {
+    height: auto!important;
+}
+.ui-tree-toggler {
+    vertical-align: top!important;
+    margin-right: 0!important;
+}
+
+
+.warning {
+    background-color: orange;
+}
+
+.ui-button {
+    height: 2.65rem!important
+}
+
+.btn-small {
+    padding: 0!important;
+    font-size: .65rem!important;
+    line-height: .2rem!important;
+    border-radius: .2rem!important;
+}
+
+.ui-panel-title {
+    line-height: 2.4em;
+}
+
+.blank {line-height: 2em!important; height: 2em;}
+
+.ui-message {display: block; padding: 0!important; margin: 0!important;}
+
+.inclterm td {display: flex;}

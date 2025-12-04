@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/page.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="primefaces"
+                xmlns:f="jakarta.faces.core">
+
+    <f:metadata>
+
+        <ui:param name="primaryTitle" value="Konfigurasi" />
+
+        <ui:param name="viewPage" value="#{configPage}" />
+        <ui:include src="/WEB-INF/components/core/base/meta/page.xhtml"/>
+        
+        <ui:param name="dataView" value="#{configPage.configList}" />
+        <ui:param name="contentId" value=":data-frm:configTbl" /> 
+        <ui:param name="notool" value="true" />
+
+        <ui:param name="pager" value="#{configPage.configList.pager}" />
+        <ui:include src="/WEB-INF/components/core/base/meta/pager.xhtml" />
+
+        <f:viewParam name="s" value="#{configPage.configList.selectionInternal}" 
+                     converter="ConfigListConverter" transient="true" />
+    </f:metadata>
+
+    <ui:define name="content">
+        <h:form id="data-frm">
+            <p:dataTable id="configTbl" widgetVar="configTbl"
+                         value="#{configPage.configList.fetchedItems}" var="data"
+                         rowKey="#{data.id}" rowIndexVar="idx"
+                         selectionMode="single"                 
+                         selection="#{configPage.configList.selection}"
+                         editable="false" editMode="cell" editInitEvent="dblclick" 
+                         scrollable="true" scrollHeight="200" resizableColumns="true"
+                         stripedRows="true" showGridlines="true"
+                         emptyMessage="#{string['common.hint.emptyData']}" >
+
+
+                <p:column headerText="Module">
+                    <h:outputText value="#{data.module}" />
+                </p:column>
+
+                <p:column headerText="Key">
+                    <h:outputText value="#{data.key}" />
+                </p:column>
+
+                <p:column headerText="Value">
+                    <h:outputText value="#{data.value}" />
+                </p:column>
+
+                <p:column headerText="Remarks">
+                    <h:outputText value="#{data.remarks}" />
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

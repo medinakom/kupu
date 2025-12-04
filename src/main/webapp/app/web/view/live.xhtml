@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets" 
+                xmlns:c="jakarta.tags.core"
+                xmlns:p="primefaces"
+                xmlns:pe="primefaces.extensions">
+
+    <ui:insert name="stylesheet">
+        <h:outputStylesheet library="css" name="video-js.css" />
+        <h:outputStylesheet library="css" name="plyr.css" />
+    </ui:insert>
+
+    <div class="row p-2">
+        <div class="col-lg-8 p-lg-2 p-0 mb-4">
+            <div class="ratio ratio-16x9 border-0" style="position:relative;">
+                <c:choose>
+                    <c:when test="#{page.youtubeLive}">
+                        <iframe src="#{config.getString('web.liveStreamingAddress')}" allowfullscreen="true"
+                                frameborder="0" allow="autoplay;encrypted-media" />
+                    </c:when>
+                    <c:otherwise>
+                        <video-js id="video_id" class="vjs-lo-skin"
+                                  style="position:absolute; top:0;" controls="true" autoplay="false"
+                                  preload="metadata">
+                            <c:choose>
+                                <c:when test="#{page.tokenValid}">
+                                    <source src="#{config.getString('web.liveStreamingUnlistedAddress')}"
+                                            type="application/x-mpegURL" />
+                                </c:when>
+                                <c:otherwise>
+                                    <source src="#{config.getString('web.liveStreamingAddress')}"
+                                            type="application/x-mpegURL" />
+                                </c:otherwise>
+                            </c:choose>
+                        </video-js>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+            <c:choose>
+                <c:when test="#{page.live ne null and (page.tokenValid)}">
+                    <div class="card p-2 surface">
+                        <div class="card-title">
+                            <h:outputText class="h5" rendered="#{page.live ne null}" value="#{page.live.kajian.title} - #{page.live.notes}" />
+                        </div>
+                        <div class="card-text">
+                            <div class="d-flex flex-column">
+                                <h:outputText class="fs-6" rendered="#{page.live ne null}" value="Ustadz #{page.live.kajian.ustadz.fullname}" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4" >
+                        <div class="card-header border-bottom-0 text-center" style="background-color: var(--md-ref-palette-primary90)">
+                            <span class="fw-bold primary-text fs-4">Kitab Kajian</span>
+                        </div>
+                        <div class="card-body p-2" style="background-color: var(--md-ref-palette-primary90)">
+                            <p:accordionPanel value="#{kajianRetriever.getKitabByKajian(page.live.kajian)}" var="kitab" activeIndex="-1" >
+                                <p:tab title="#{kitab.title}" class="mb-2">
+                                    <pe:documentViewer height="500" url="/api/videokajian/kitab/#{kitab.id}" zoom="page-width" />
+                                </p:tab>
+                            </p:accordionPanel>
+                        </div>
+                    </div>
+                </c:when>
+                <c:when test="#{(page.publicLive ne null) }">
+                    <div class="card p-2 surface">
+                        <div class="card-title">
+                            <h:outputText class="h5" rendered="#{page.publicLive ne null}" value="#{page.publicLive.kajian.title} - #{page.publicLive.notes}" />
+                        </div>
+                        <div class="card-text">
+                            <div class="d-flex flex-column">
+                                <h:outputText class="fs-6" rendered="#{page.publicLive ne null}" value="Ustadz #{page.publicLive.kajian.ustadz.fullname}" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4" >
+                        <div class="card-header border-bottom-0 text-center" style="background-color: var(--md-ref-palette-primary90)">
+                            <span class="fw-bold primary-text fs-4">Kitab Kajian</span>
+                        </div>
+                        <div class="card-body p-2" style="background-color: var(--md-ref-palette-primary90)">
+                            <p:accordionPanel value="#{kajianRetriever.getKitabByKajian(page.publicLive.kajian)}" var="kitab" activeIndex="-1" >
+                                <p:tab title="#{kitab.title}" class="mb-2">
+                                    <pe:documentViewer height="500" url="/api/videokajian/kitab/#{kitab.id}" zoom="page-width" />
+                                </p:tab>
+                            </p:accordionPanel>
+                        </div>
+                    </div>
+                </c:when>
+            </c:choose>
+        </div>
+        <div class="col-lg-4 p-lg-2 p-0">
+            <c:if test="#{not page.youtubeLive}">
+                <div class="card mb-4">
+                    <c:choose>
+                        <c:when test="#{page.tokenValid}">
+                            <iframe src="#{config.getString('web.liveStreamingUnlistedChatAddress')}" height="500"/>
+                        </c:when>
+                        <c:otherwise>
+                            <iframe src="#{config.getString('web.liveStreamingChatAddress')}" height="500"/>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </c:if>
+            <ui:include src="/WEB-INF/components/app/web/list/kajian-terpenting.xhtml" />
+            <ui:include src="/WEB-INF/components/app/web/list/kajian-terbaru.xhtml" />
+        </div>
+    </div>   
+
+    <ui:insert name="script">
+        <h:outputScript library="js" name="video.js" />
+        <h:outputScript library="js" name="videojs-http-streaming.js" />
+        <script>
+            var player = videojs('video_id');
+        </script>
+    </ui:insert>
+
+
+</ui:composition>
+

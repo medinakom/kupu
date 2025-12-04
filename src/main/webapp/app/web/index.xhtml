@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/WEB-INF/templates/frontpage.xhtml"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets" >
+    <f:metadata>
+        <ui:param name="brand" value="#{config.getString('web.websiteName')}" />
+        <ui:param name="description" value="#{config.getString('web.firstSlogan')} #{config.getString('web.secondSlogan')}" />
+        <f:viewParam name="c" value="#{page.activeCategoryId}" />
+        <f:viewParam name="t" value="#{page.token}" />
+    </f:metadata>
+
+    <ui:define name="content">
+        <ui:decorate template="/app/web/view/#{page.activeCategoryId ne null ? page.activeCategoryId : 'home'}.xhtml" />
+    </ui:define>
+
+</ui:composition>
+

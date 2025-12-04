@@ -1,0 +1,20 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:param name="video" value="#{kajianRetriever.newestVideo}" />
+    <ui:param name="id" value="video_1" />
+
+    <div class="card mb-4">
+        <div class="card-header" style="background-color: #b5a98b; color: #5b2b00">
+            <span class="fw-bold">Video Terbaru</span>
+        </div>
+        <div class="card-body p-0" style="background-color: #f2eddf; color: #2B1429!important">
+            <ui:include src="/WEB-INF/components/player.xhtml">
+            </ui:include>
+        </div>
+    </div>
+
+</ui:composition>
+

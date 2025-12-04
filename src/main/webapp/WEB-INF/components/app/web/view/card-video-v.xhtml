@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <div class="card bg-transparent border-0">
+        <div class="row g-0">
+            <div class="col-12 d-flex">
+                <div class="card-body flex-fill d-flex align-items-start overflow-hidden p-2">
+                    <div class="me-2">
+                        <i class="pi pi-ellipsis-v" />
+                    </div>                    
+                    <div class="flex-column">
+                        <h:link class="d-block fw-bold stretched-link text-decoration-none primary-text"
+                                value="#{video.kajian.title} - #{video.notes}" 
+                                outcome="/app/web/view/video.xhtml?k=#{video.kajian.id}&amp;v=#{video.id}" />
+                        <h:outputText class="text-truncate primary-text" value="Ustadz #{video.kajian.ustadz.fullname}" />
+                    </div>
+                </div>
+                <ui:remove>
+                    <h:outputText class="d-block d-flex" style="color: #2B1429!important" value="#{video.eventTime}" >
+                        <f:convertDateTime type="localDateTime" pattern="dd-MM-yyyy" />
+                    </h:outputText>
+                </ui:remove>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>
+

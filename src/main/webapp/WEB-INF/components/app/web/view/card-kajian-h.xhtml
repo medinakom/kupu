@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+                xmlns:h="http://xmlns.jcp.org/jsf/html" >
+
+    <div class="card mb-4 border-0">
+        <div class="row g-0">
+            <ui:remove>
+            <div class="col-sm-4">
+                <h:link class="d-block streched-link">
+                    <div class="ratio ratio-16x9">
+                        <img class="bd-placeholder-img card-img-top" src="/resources/images/blank.svg" />
+                    </div>
+                </h:link>
+            </div>
+            </ui:remove>
+            <div class="col-sm-8 d-flex">
+                <div class="card-body flex-fill d-flex flex-column">
+                    <h:link class="flex-fill fw-bold stretched-link text-decoration-none text-reset"
+                            value="#{kajian.title}" 
+                            outcome="/video.xhtml?k=#{kajian.id}&amp;v=#{video.id}" />
+                    <span class="d-block d-flex text-muted">
+                        <h:outputText class="d-inline-block" value="Ustadz #{kajian.ustadz.fullname}" />
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>
+

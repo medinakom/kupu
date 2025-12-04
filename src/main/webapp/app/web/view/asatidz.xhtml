@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/WEB-INF/templates/frontpage.xhtml"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets" 
+                xmlns:c="jakarta.tags.core"> 
+
+    <f:metadata>
+        <ui:param name="brand" value="#{config.getString('web.websiteName')}" />
+        <ui:param name="description" value="#{config.getString('web.firstSlogan')}" />
+        <f:viewParam name="u" value="#{page.activeUstadzId}" />
+    </f:metadata>
+
+    <ui:define name="content">
+        <div class="card my-4" style="background-color: var(--md-ref-palette-primary90)">
+            <div class="card-header bg-transparent text-center border-0">
+                <h:outputText class="d-block fw-bold primary-text h2" value="Kajian Asatidz" />
+                <c:if test="#{page.activeUstadzId gt -1}">
+                    <h:outputText class="d-block fw-bold primary-text h4" value="Ustadz #{page.ustadz.name}" />
+                </c:if>
+            </div>
+            <div class="card-body p-2 border-0">
+
+                <c:if test="#{page.activeUstadzId gt -1}">
+                    <h:form prependId="false" id="content" >
+                        <ul class="list-group">  
+                            <ui:repeat value="#{kajianRetriever.getByUstadz(page.activeUstadzId)}" var="kajian">
+                                <li class="list-group-item list-group-item-action border-0 mb-2"> 
+                                    <ui:include src="/WEB-INF/components/app/web/view/card-kajian-ustadz-v.xhtml">
+                                        <ui:param name="kajian" value="#{kajian}" />
+                                        <ui:param name="video" value="#{kajianRetriever.getFirstVideo(kajian)}" />
+                                    </ui:include>
+                                </li>
+                            </ui:repeat>
+                        </ul>
+                    </h:form>
+                </c:if>
+                <c:if test="#{page.activeUstadzId eq -1}">            
+                    <h:form>
+                        <ul class="list-group p-2">
+                            <ui:repeat value="#{kajianRetriever.asatidz}" var="ustadz">
+                                <li class="list-group-item list-group-item-action border-0 mb-2" >
+                                    <ui:include src="/WEB-INF/components/app/web/view/card-ustadz-v.xhtml">
+                                        <ui:param name="ustadz" value="#{ustadz}" />
+                                    </ui:include>
+                                </li>
+                            </ui:repeat>
+                        </ul>
+                    </h:form>
+                </c:if>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
+

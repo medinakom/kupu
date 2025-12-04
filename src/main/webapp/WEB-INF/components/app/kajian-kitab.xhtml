@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+                xmlns:h="http://xmlns.jcp.org/jsf/html" >
+
+    <div class="card border-bottom-0 mb-4">
+        <div class="card-header border-bottom-0 text-center" 
+              style="background-color: #ecf2e3; color: #3c7101; font-family: Noto Sans, sans-serif!important; font-weight: 600!important; font-size: 1.25rem!important;">
+            <span class="fw-bold">Kajian Kitab</span>
+        </div>
+        <div class="card-body p-2" style="background-color: #ecf2e3;">
+            <h:form>
+                <ul class="list-group">
+                    <ui:repeat value="#{kajianRetriever.getByCategory('kitab', 1000)}" var="kajian">
+                        <li class="list-group-item list-group-item-action border-0 mb-2" style="background-color: #ffffff!important; border-bottom: thin solid #c9c7bf!important">
+                            <ui:include src="/WEB-INF/components/card-kajian-v.xhtml">
+                                <ui:param name="kajian" value="#{kajian}" />
+                                <ui:param name="video" value="#{kajianRetriever.getFirstVideo(kajian)}" />
+                            </ui:include>
+                        </li>
+                    </ui:repeat>
+                </ul>
+            </h:form>
+        </div>
+    </div>
+
+</ui:composition>
+
