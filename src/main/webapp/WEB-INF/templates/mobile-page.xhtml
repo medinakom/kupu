@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />            
+        <link rel="shortcut icon" type="image/x-icon" 
+              href="#{resource['images/favicon.ico']}" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+        <title>#{config.getString('config.AppName')} | #{title}</title>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.min.css" />
+        <h:outputStylesheet library="css" name="kupu.css" />
+
+        <ui:insert name="styles"/>
+
+        <h:outputScript>
+            <ui:insert name="vars" >
+                var content = "#{dataView.name}";
+            </ui:insert>
+            function addressBarUpdate(url) {
+            window.history.pushState(null, null, url);
+            }
+            function resizeContainer() { 
+            if(!PrimeFaces.widgets[content] || PF(content).scrollBody == undefined) return; 
+            var container = $('#container');
+            var tableId = '#' + PF(content).id.replace(':', '\\:');
+            var tableHead = $(tableId + '_head')
+            var scrollHeight = container.height() - tableHead.height() - 4;
+            var scrollBody = PF(content).scrollBody;
+            scrollBody.css('height', scrollHeight + 'px');
+            scrollBody.css('max-height', scrollHeight + 'px');
+            }
+        </h:outputScript>    
+        <h:outputScript name="locales/locale-#{theApp.localization}.js" />
+        <ui:insert name="jscript" />
+    </h:head>
+    <h:body class="m-0">
+
+        <h:form>
+            <p:remoteCommand  name="updateAddress" action="#{viewPage.updateAddressBar}"
+                              oncomplete="addressBarUpdate(args.url)" />
+        </h:form>
+
+        <h:form>
+            <p:remoteCommand  name="refresh" action="#{viewPage.updateAddressBar}"
+                              oncomplete="addressBarUpdate(args.url);resizeContainer();" 
+                              update="#{contentId}" />
+        </h:form>
+
+        <ui:insert name="other-nonview" />
+
+        <div class="flex flex-column justify-content-between align-items-stretch h-screen">
+
+            <!-- Main Nav -->
+            <ui:insert name="navbar">
+                <ui:decorate template="/WEB-INF/components/core/common/navbarm.xhtml" />
+            </ui:insert>
+
+            <!-- Content -->
+            <div id="container" class="flex-grow-1 flex flex-column overflow-hidden">                    
+                <p:scrollPanel mode="native" class="flex flex-column flex-grow-1 p-0 m-0 border-0 bg-bluegray-100">
+                    <ui:insert name="content" />
+                </p:scrollPanel>
+            </div>
+
+        </div>
+
+        <p:growl id="messages" skipDetailIfEqualsSummary="true"   />
+    </h:body>
+    
+    <h:outputScript>
+        $(document).ready(resizeContainer);
+    </h:outputScript>
+</html>
+

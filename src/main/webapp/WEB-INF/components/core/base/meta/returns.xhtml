@@ -1,0 +1,9 @@
+<ui:composition xmlns:ui="jakarta.faces.facelets" 
+                xmlns:f="jakarta.faces.core">
+    <f:viewParam name="h" value="#{viewPage.returnsProcessor.home}" transient="true" />
+    <f:viewParam name="w" value="#{viewPage.returnsProcessor.what}" converter="IntegerConverter" transient="true" />
+    <f:viewParam name="r" value="#{viewPage.returnsProcessor.returns}" transient="true" />
+    <f:viewParam name="c" value="#{viewPage.returnsProcessor.converter}" transient="true" />
+    <f:viewAction action="#{viewPage.returnsProcessor.checkReturns}" transient="true" />
+</ui:composition>
+

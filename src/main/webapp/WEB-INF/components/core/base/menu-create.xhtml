@@ -1,0 +1,11 @@
+<ui:composition xmlns:ui="jakarta.faces.facelets" 
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:menuitem icon="pi pi-plus" value="#{string['common.create.label']}"
+                rendered="#{viewPage.isUserHasRoles(dataView.createPermission)}"
+                immediate="true" actionListener="#{dataView.onCreate}"
+                oncomplete="#{updateCallback}" 
+                update="#{updateListener} :messages"
+                disabled="#{disabled}" />
+
+</ui:composition>

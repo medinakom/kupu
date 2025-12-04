@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:ui="jakarta.faces.facelets" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"> 
+
+    <ui:insert name="style" />
+
+    <p:overlayPanel widgetVar="#{widgetVar}" my="left top" appendTo="@(body)"
+                    at="left bottom" styleClass="#{styleClass ne null ? styleClass : 'w-4'}" dynamic="true"
+                    dismissable="true"  cache="false" transient="true">
+        <div class="flex flex-column border-1 surface-border gap-2">
+            <div>
+                <ui:insert name="editor-content" />
+            </div>
+            <ui:insert name="savetool">
+                <div class="flex justify-content-end pb-2 px-2">
+                    <p:commandButton icon="pi pi-save" immediate="true"
+                                     actionListener="#{editor.onSave}"
+                                     oncomplete="PF('#{widgetVar}').hide()" />
+                </div>
+            </ui:insert>
+        </div>
+    </p:overlayPanel>
+
+    <p:remoteCommand  name="set#{name}Context" actionListener="#{editor.initContext}" update="@form:#{id}" />
+
+    <h:outputScript>
+        function show#{name}(trigger, updates, context) {
+        set#{name}Context([{name: 'updates', value: updates}, {name: 'context', value: context}]);
+        PF('#{widgetVar}').show(trigger);
+        }
+    </h:outputScript>
+
+</ui:composition>
+
+

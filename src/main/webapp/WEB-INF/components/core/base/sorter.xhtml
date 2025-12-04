@@ -1,0 +1,66 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="jakarta.faces.facelets" 
+    xmlns:h="jakarta.faces.html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="jakarta.faces.core"
+    xmlns:c="jakarta.tags.core">
+
+    <style>
+        .sorter-container {
+            display: flex!important;
+            align-items: center!important;
+        }
+        .sorter-content {
+            display: block;
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+            font-size: .8rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            border: thin solid #607d8b;
+            border-radius: 1.25rem;
+            background-color: #607d8b;
+            padding: .5rem;
+        }
+    </style>
+
+    <ui:param name="sorter" value="#{sorter}" />
+
+    <p:commandButton id="#{sorter ne null ? sorter.name : 'sorter'}" immediate="true" rendered="#{sorter ne null}"
+                     type="button" onclick="PF('#{sorter.name}').show()"
+                     icon="pi pi-sort-alt" 
+                     styleClass="ui-button-flat" />
+
+    <p:sidebar rendered="#{sorter ne null}" fullScreen="true"
+               widgetVar="#{sorter.name}" dynamic="true"  >
+
+        <div class="mt-4 flex flex-column pb-6 h-screen">
+            <div class="flex-grow-0 mb-2">
+                <h:outputText value="Urutan" class="text-xl font-bold" />
+            </div>
+            
+            <div class="flex-grow-1 flex flex-column p-4 gap-4 overflow-y-auto border-1 border-round surface-border">
+                <ui:repeat value="#{sorter.declaredSorterData}" var="srt">
+                    <div class="filter-field">
+                        <p:selectBooleanCheckbox itemLabel="#{srt.label}" value="#{srt.sort}" />
+                        <p:selectOneMenu value="#{srt.sortOrder}" converter="SortOrderConverter">
+                            <f:selectItems value="#{sortOrderSelectList.fetchedItems}" var="so" itemLabel="#{so.sql}" itemValue="#{so}" />
+                        </p:selectOneMenu>
+                    </div>
+                </ui:repeat>
+            </div>
+
+            <div class="flex-grow-0 flex justify-content-center p-2 w-full surface-300 border-1 border-round-bottom surface-border">
+                <p:commandButton value="Terapkan"
+                                 actionListener="#{sorter.doSort}"
+                                 oncomplete="#{sorterCallback}; PF('#{sorter.name}').hide();"
+                                 update="#{sorterListener}" 
+                                 icon="pi pi-sort-alt"                                 
+                                 class="ui-button-success mr-2" />
+            </div>
+        </div>
+    </p:sidebar>
+
+</ui:composition>
+

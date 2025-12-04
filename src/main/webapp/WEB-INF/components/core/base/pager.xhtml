@@ -1,0 +1,49 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:ui="jakarta.faces.facelets" 
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="jakarta.faces.core">
+
+    <h:panelGroup layout="block" class="flex align-items-center flex-no-wrap" rendered="#{rendered ne null ? rendered : true}">
+        <div class="flex flex-no-wrap">
+            <p:outputLabel value="Data:" />
+            <p:outputLabel value="#{pager.itemsCount}" />
+        </div>
+        <h:panelGroup layout="block" rendered="#{pager.itemsCount gt pager.pageSize}">
+            <p:spacer width="8" />
+            <p:commandButton actionListener="#{pager.first}"
+                             disabled="#{pager.atStart}"
+                             update="#{pagerListener} @form" 
+                             oncomplete="#{pagerCallback}" 
+                             icon="pi pi-angle-double-left" class="ui-button-flat" />
+
+            <p:commandButton  actionListener="#{pager.previous}"
+                              disabled="#{pager.atStart}"
+                              update="#{pagerListener} @form" 
+                              oncomplete="#{pagerCallback}" 
+                              icon="pi pi-angle-left" class="ui-button-flat" />
+
+            <p:selectOneMenu value="#{pager.offset}" converter="LongConverter" > 
+                <f:selectItems value="#{pager.pageOptions}" var="page" 
+                               itemValue="#{page}" />
+                <p:ajax listener="#{pager.onPaging}"
+                        update="#{pagerListener} @form"
+                        oncomplete="#{pagerCallback}"    />
+            </p:selectOneMenu>
+
+            <p:commandButton actionListener="#{pager.next}" 
+                             disabled="#{pager.atEnd}"
+                             update="#{pagerListener} @form"
+                             oncomplete="#{pagerCallback}"  
+                             icon="pi pi-angle-right" class="ui-button-flat"/>
+
+            <p:commandButton actionListener="#{pager.last}"
+                             disabled="#{pager.atEnd}"
+                             update="#{pagerListener} @form" 
+                             oncomplete="#{pagerCallback}" 
+                             icon="pi pi-angle-double-right" class="ui-button-flat"/>
+        </h:panelGroup>
+    </h:panelGroup>
+
+</ui:composition>

@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:ui="jakarta.faces.facelets" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"> 
+
+    <style>
+        .ui-overlaypanel-content {
+            padding: 0!important
+        }
+        .noheader {
+            padding: 0!important;
+            border: none!important;
+        }
+        .noheader .ui-datatable-scrollable-header {
+            display: none!important;
+        }
+    </style>   
+
+    <p:overlayPanel widgetVar="#{widgetVar}" my="left top" at="left bottom" dynamic="true" styleClass="w-20rem"  >
+        <p:dataTable id="#{id}"  var="data" value="#{chooser.list.model}"
+                     selectionMode="single" selection="#{chooser.choosenEntity}"
+                     scrollRows="10" scrollable="true" liveScroll="true" 
+                     scrollHeight="200" class="noheader">
+
+            <p:ajax event="rowSelect" listener="#{chooser.onSelect}"
+                    oncomplete="PF('#{widgetVar}').hide()" />
+
+            <f:facet name="header">
+                <span class="ui-input-icon-left">
+                    <i class="pi pi-search" />
+                    <p:inputText value="#{chooser.searchTerm}" >
+                        <p:ajax event="keyup" update="@form:#{id}" delay="300" />
+                    </p:inputText>
+                </span>                
+            </f:facet>
+            <ui:insert name="columns" />
+        </p:dataTable>
+    </p:overlayPanel>
+    
+    <p:remoteCommand name="set#{name}Context" immediate="true" actionListener="#{chooser.initContext}" update="@form:#{id}" />
+
+    <script type="text/javascript">
+        function show#{name}(trigger, updates) {
+            set#{name}Context([{name: 'updates', value: updates}]);
+            PF('#{widgetVar}').show(trigger);
+        }
+    </script>
+
+</ui:composition>
+

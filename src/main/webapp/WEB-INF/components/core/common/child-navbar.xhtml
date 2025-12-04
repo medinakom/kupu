@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="jakarta.tags.core">
+
+    <div class="block flex-grow-0 flex flex-nowrap align-items-center surface-300 border-0 border-bottom-1 border-300 px-2 py-1">
+        <h:form class="flex flex-nowrap align-items-center flex-grow-1 gap-2 mr-2">
+            <p:commandButton icon="pi pi-times" actionListener="#{viewPage.up}"
+                             class="ui-button ui-button-flat" />
+            <ui:insert name="page-title">
+                <h:outputText value="#{primaryTitle}" class="ui-widget text-color font-medium text-2xl ml-2" />
+                <c:choose><c:when test="#{not empty secondaryTitle}"> -- <span class="font-italic font-normal text-xl">#{secondaryTitle}</span></c:when></c:choose>
+            </ui:insert>
+        </h:form>
+        <h:form  id="top-tools-frm">
+            <ui:insert name="top-tools" />
+        </h:form>
+        <ui:insert name="sorter" />
+        <ui:insert name="overlayFilter" />
+    </div>
+</ui:composition>

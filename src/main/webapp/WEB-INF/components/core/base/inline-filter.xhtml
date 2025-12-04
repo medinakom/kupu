@@ -1,0 +1,20 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:ui="jakarta.faces.facelets" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="jakarta.faces.html">
+
+    <div class="flex-grow-1 flex gap-3 align-items-start">
+        <div class="flex-grow-1 flex flex-wrap gap-3 px-2">
+            <ui:include src="#{filterUi}" />
+        </div>
+        <div class="filter-field flex-grow-0">
+            <p:commandButton actionListener="#{filter.doFilter}"
+                             oncomplete="#{filterCallback}"
+                             update="#{filterListener}" 
+                             icon="pi pi-refresh"                             
+                             class="ui-button-success" />
+        </div>
+    </div>
+
+</ui:composition>
+

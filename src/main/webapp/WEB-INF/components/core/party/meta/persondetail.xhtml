@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core" >
+
+    <f:viewParam name="cs" value="#{viewPage.classificationList.selectionsInternal}" converter="PartyClassificationListConverter" transient="true" />
+    <f:viewParam name="cp" value="#{viewPage.classificationList.pager.pageSize}" converter="LongConverter" transient="true" />
+    <f:viewParam name="co" value="#{viewPage.classificationList.pager.offset}" converter="LongConverter" transient="true" />
+
+    <f:viewParam name="is" value="#{viewPage.identityList.selectionsInternal}" converter="PersonIdentityListConverter" transient="true" />
+    <f:viewParam name="ip" value="#{viewPage.identityList.pager.pageSize}" converter="LongConverter" transient="true" />
+    <f:viewParam name="io" value="#{viewPage.identityList.pager.offset}" converter="LongConverter" transient="true" />
+
+    <f:viewParam name="ps" value="#{viewPage.postalAddressList.selectionsInternal}" converter="PartyContactMechanismListConverter" transient="true" />
+    <f:viewParam name="pp" value="#{viewPage.postalAddressList.pager.pageSize}" converter="LongConverter" transient="true" />
+    <f:viewParam name="po" value="#{viewPage.postalAddressList.pager.offset}" converter="LongConverter" transient="true" />
+
+    <f:viewParam name="ts" value="#{viewPage.telecommunicationNumberList.selectionsInternal}" converter="PartyContactMechanismListConverter" transient="true" /> 
+    <f:viewParam name="tp" value="#{viewPage.telecommunicationNumberList.pager.pageSize}" converter="LongConverter" transient="true" />
+    <f:viewParam name="to" value="#{viewPage.telecommunicationNumberList.pager.offset}" converter="LongConverter" transient="true" />
+
+    <f:viewParam name="es" value="#{viewPage.electronicAddressList.selectionsInternal}" converter="PartyContactMechanismListConverter" transient="true" />
+    <f:viewParam name="ep" value="#{viewPage.electronicAddressList.pager.pageSize}" converter="LongConverter" transient="true" />
+    <f:viewParam name="eo" value="#{viewPage.electronicAddressList.pager.offset}" converter="LongConverter" transient="true" />
+
+    <f:viewParam name="rs" value="#{viewPage.roleList.selectionsInternal}" converter="PartyRoleListConverter" transient="true" />
+    <f:viewParam name="rp" value="#{viewPage.roleList.pager.pageSize}" converter="LongConverter" transient="true" />
+    <f:viewParam name="ro" value="#{viewPage.roleList.pager.offset}" converter="LongConverter" transient="true" />
+</ui:composition>

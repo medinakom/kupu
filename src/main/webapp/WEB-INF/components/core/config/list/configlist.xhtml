@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets" 
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="primefaces"
+                xmlns:f="jakarta.faces.core"
+                xmlns:c="jakarta.tags.core" >
+
+    <ui:decorate template="/WEB-INF/components/core/base/table.xhtml" >
+
+        <ui:define name="columns">
+
+            <p:column headerText="Modul">              
+                <h:outputText value="#{data.module}" />
+            </p:column>
+
+            <p:column headerText="Remarks">                
+                <h:outputText value="#{data.remarks}" />
+            </p:column>
+
+            <p:column headerText="Value" exportTag="value">                
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{data.value}" />
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{data.value}" immediate="true" />
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+
+        </ui:define>
+
+    </ui:decorate>
+
+</ui:composition>
+

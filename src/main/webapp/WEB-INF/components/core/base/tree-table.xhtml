@@ -1,0 +1,73 @@
+<ui:composition xmlns:ui="jakarta.faces.facelets" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core">
+
+    <p:treeTable id="#{dataView.name}" widgetVar="#{dataView.name}"
+                 value="#{dataView.rootNode}" var="data" propagateSelectionDown="false" propagateSelectionUp="false"
+                 selectionMode="#{dataView.selectionMode}"  expandMode="children"
+                 selection="#{dataView.selectionMode eq 'single' ? dataView.nodeSelection : dataView.nodeSelections}"
+                 scrollable="true" scrollHeight="1" showGridlines="true" resizableColumns="true"
+                 emptyMessage="#{string['common.hint.emptyData']}" styleClass="#{tableStyle}"  >
+ 
+        <p:ajax event="select" immediate="true"
+                oncomplete="#{selectCallback};updateAddress();refreshCasing();" 
+                update="#{selectListener}" />
+        <p:ajax event="unselect" immediate="true"
+                oncomplete="#{selectCallback};updateAddress();refreshCasing();" 
+                update="#{selectListener}" />
+        <p:ajax event="contextMenu" immediate="true"
+                oncomplete="#{selectCallback};updateAddress();refreshCasing();" 
+                update="@form:context-menu #{selectListener}" />
+
+        <ui:insert name="prefix-columns" />
+        <ui:insert name="columns" />
+        <ui:insert name="suffix-columns" />
+
+    </p:treeTable>
+    
+    <p:contextMenu id="context-menu" for="#{tableId ne null ? tableId : dataView.name}" >
+        <ui:insert name="crud-context-menu">
+            <ui:insert name="crud-create">
+                <ui:include src="/WEB-INF/components/core/base/menu-create.xhtml"/>
+            </ui:insert>
+            <ui:insert name="crud-update">
+                <ui:include src="/WEB-INF/components/core/base/menu-update.xhtml"/>
+            </ui:insert>
+            <ui:insert name="crud-delete">
+                <ui:include src="/WEB-INF/components/core/base/menu-delete.xhtml" />
+            </ui:insert>
+        </ui:insert>
+        <ui:insert name="context-menu" />
+    </p:contextMenu>
+
+    <p:dialog header="Konfirmasi" widgetVar="#{dataView.name}deleteDlg" appendTo="@(body)"
+              modal="true" closable="true" dynamic="true"  >
+        <p>Data akan dihapus !</p>
+        <f:facet name="footer">
+                <p:commandButton type="button" value="Batal" 
+                                 onclick="PF('#{dataView.name}deleteDlg').hide()" />
+                <p:commandButton type="button" value="Lanjut" 
+                                 onclick="#{dataView.name}deleteCmd()" />
+        </f:facet>
+    </p:dialog>
+
+    <p:remoteCommand name="#{dataView.name}deleteCmd" actionListener="#{dataView.onDelete}" 
+                     oncomplete="PF('#{dataView.name}deleteDlg').hide();updateAddress();refreshCasing();refreshContent();#{updateCallback}"
+                     update="#{updateListener} :messages" />    
+    
+    <h:outputScript>
+        $(document).ready(function() {
+        
+            var elements = document.getElementById(PF('#{dataView.name}').id)
+            .getElementsByTagName('tbody')[0]
+            .getElementsByClassName('ui-state-highlight');
+            if(elements.length > 0) {
+                elements[0].scrollIntoViewIfNeeded();
+            }
+
+        });
+    </h:outputScript>
+
+</ui:composition>
+

@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/page.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:c="jakarta.tags.core"
+                xmlns:p="primefaces">
+    
+    <ui:define name="navbar">
+        <ui:decorate template="/WEB-INF/components/core/common/navbar.xhtml" >
+            <ui:param name="updateListener" value="#{updateListener}" />
+            <ui:define name="parent-nav">
+                <p:commandButton icon="pi pi-times" actionListener="#{viewPage.up}"
+                             class="ui-button ui-button-flat" />
+            </ui:define>
+            <ui:define name="page-title">
+                <h:outputText value="#{primaryTitle}" class="ui-widget text-color font-medium text-2xl ml-2" />
+                <c:choose><c:when test="#{not empty secondaryTitle}"> -- <span class="font-italic font-normal text-xl">#{secondaryTitle}</span></c:when></c:choose>
+            </ui:define>
+            <ui:define name="sorter">  
+                <h:form rendered="#{sorter ne null}">
+                    <ui:include src="/WEB-INF/components/core/base/sorter.xhtml" >
+                        <ui:param name="sorterCallback" value="refreshContent()" />
+                    </ui:include>
+                </h:form>
+            </ui:define>
+            <ui:define name="overlayFilter">
+                <h:form id="overlay-filter-frm" rendered="#{filterType eq 'overlay'}" class="flex align-items-center flex-grow-0 mr-2 overlay-filter">
+                    <ui:include src="/WEB-INF/components/core/base/overlay-filter.xhtml" >
+                        <ui:param name="filterCallback" value="refreshContent();#{filterCallback}" />
+                        <ui:param name="filterListener" value=":pager-frm #{filterListener}" />
+                    </ui:include>
+                </h:form>
+            </ui:define>
+        </ui:decorate>
+    </ui:define>
+
+</ui:composition>
+

@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:jsf="http://xmlns.jcp.org/jsf" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="jakarta.tags.core">
+
+    <div class="block flex-grow-0 flex flex-nowrap align-items-center surface-300 border-0 border-bottom-1 border-300 px-2 py-1">
+        <div class="flex flex-nowrap align-items-center flex-grow-1 gap-2 mr-2">
+            <ui:insert name="page-title">
+                <h:outputText value="#{primaryTitle}" class="ui-widget text-color font-medium text-2xl ml-2" />
+                <c:choose><c:when test="#{not empty secondaryTitle}"> -- <span class="font-italic font-normal text-xl">#{secondaryTitle}</span></c:when></c:choose>
+            </ui:insert>
+        </div>
+        <h:form id="overlay-filter-frm" rendered="#{filterType eq 'overlay'}" class="flex align-items-center flex-grow-0 mr-2 overlay-filter">
+            <ui:include src="/WEB-INF/components/core/base/overlay-filter.xhtml" >
+                <ui:param name="filterCallback" value="refreshContent();#{filterCallback}" />
+                <ui:param name="filterListener" value="#{contentId} :pager-frm #{filterListener}" />
+            </ui:include>
+        </h:form>
+        <h:form class="flex flex-nowrap justify-content-end align-items-center flex-grow-0 gap-2">
+            <p:commandButton icon="pi pi-times"
+                             actionListener="#{viewPage.up}"
+                             class="ui-button rounded-button ui-button-outlined" />
+            <p:commandButton icon="pi pi-check" immediate="true"
+                             actionListener="#{viewPage.finish}"
+                             class="ui-button rounded-button ui-button-outlined" />
+        </h:form>
+    </div>
+
+</ui:composition>

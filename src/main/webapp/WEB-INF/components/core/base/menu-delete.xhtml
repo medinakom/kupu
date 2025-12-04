@@ -1,0 +1,11 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core">
+
+    <p:menuitem icon="pi pi-trash" value="#{string['common.delete.label']}"
+                rendered="#{viewPage.isUserHasRoles(dataView.deletePermission)}"
+                immediate="true" disabled="#{not dataView.selector.onSelection}"
+                onclick="PF('#{dataView.name}deleteDlg').show()" />
+
+</ui:composition>
