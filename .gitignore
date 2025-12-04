@@ -1,4 +1,5 @@
 /src/main/webapp/WEB-INF/lib/
 /nb-configuration.xml
+/nbactions.xml
 /faces-config.NavData
 /target/
