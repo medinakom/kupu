@@ -6,8 +6,6 @@
 
 # Generated Applications
 /kupu-*/
-!/kupu-core/
-!/kupu-starter/
 
 # IDE files
 .idea/
