@@ -1,0 +1,26 @@
+# Kupu Workspace Gitignore
+
+# Child Repositories (Independent)
+/kupu-core/
+/kupu-starter/
+
+# Generated Applications
+/kupu-*/
+!/kupu-core/
+!/kupu-starter/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts (just in case they appear in root)
+target/
+*.war
+*.jar
