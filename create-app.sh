@@ -95,3 +95,4 @@ fi
 
 echo "✨ Application $APP_NAME generated successfully!"
 echo "👉 Get started: cd $TARGET_DIR && mvn clean install"
+echo "🚀 Run with Payara Micro: mvn payara-micro:start"
