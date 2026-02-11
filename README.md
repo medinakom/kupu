@@ -4,8 +4,8 @@ This workspace is designed to separate framework development from application de
 
 ## 📁 Projects
 
-- **[kupu-core](kupu-core/)** (Framework): The standalone Kupu framework library.
-- **[kupu-starter](kupu-starter/)** (Skeleton): The base application used to generate new Kupu apps.
+- **[kupu-core](https://github.com/medinakom/kupu-core)** (Framework): The standalone Kupu framework library.
+- **[kupu-starter](https://github.com/medinakom/kupu-starter)** (Skeleton): The base application used to generate new Kupu apps.
 
 ## 🚀 Independent Development
 
@@ -34,6 +34,6 @@ Create any application type (School, ERP, Logistics, etc.) instantly:
 ## 📜 Framework Documentation
 
 Found inside `kupu-core/`:
-- [Knowledge Base](kupu-core/KNOWLEDGE_BASE.md)
-- [Contributing Guidelines](kupu-core/CONTRIBUTING.md)
-- [Improvement Roadmap](kupu-core/TODO.md)
+- [Knowledge Base](https://github.com/medinakom/kupu-core/blob/main/KNOWLEDGE_BASE.md)
+- [Contributing Guidelines](https://github.com/medinakom/kupu-core/blob/main/CONTRIBUTING.md)
+- [Improvement Roadmap](https://github.com/medinakom/kupu-core/blob/main/TODO.md)
