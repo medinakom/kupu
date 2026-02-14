@@ -12,8 +12,8 @@ if [ -z "$APP_NAME" ]; then
     exit 1
 fi
 
-PROJECT_ROOT=$(pwd)
-TARGET_DIR="$PROJECT_ROOT/../$APP_NAME"
+PROJECT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+TARGET_DIR="$(dirname "$PROJECT_ROOT")/$APP_NAME"
 DEFAULT_PACKAGE="id.my.mdn.kupu.app"
 
 if [ -z "$NEW_PACKAGE" ]; then
@@ -39,6 +39,8 @@ mkdir -p "$TARGET_DIR"
 cp -r "$PROJECT_ROOT/kupu-starter/." "$TARGET_DIR/"
 rm -rf "$TARGET_DIR/target"
 rm -rf "$TARGET_DIR/.git"
+rm -f "$TARGET_DIR/nb-configuration.xml"
+rm -rf "$TARGET_DIR/src/main/webapp/WEB-INF/lib/"*
 
 # 2. Rename Directory Structure
 OLD_PATH=$(echo $DEFAULT_PACKAGE | tr . /)
@@ -80,9 +82,17 @@ git commit -m "[init] chore: initialize $APP_NAME as a Kupu application" -q
 
 # 6. VERIFY ARCHITECTURE
 echo "🔎 Verifying architecture compliance..."
+
+MVN_CMD=""
 if command -v mvn &> /dev/null; then
+    MVN_CMD="mvn"
+elif command -v maven &> /dev/null; then
+    MVN_CMD="maven"
+fi
+
+if [ -n "$MVN_CMD" ]; then
     # We run it synchronously to provide feedback
-    mvn test -Dtest=ArchitectureTest > /tmp/arch_test_out 2>&1
+    $MVN_CMD test -Dtest=ArchitectureTest > /tmp/arch_test_out 2>&1
     if [ $? -eq 0 ]; then
         echo "✅ Architecture verification PASSED!"
     else
@@ -92,6 +102,9 @@ if command -v mvn &> /dev/null; then
 else
     echo "⏭️  Maven not found, skipping immediate verification."
 fi
+
+# 7. CLEAN UP
+rm -rf "$TARGET_DIR/target"
 
 echo "✨ Application $APP_NAME generated successfully!"
 echo "👉 Get started: cd $TARGET_DIR && mvn clean install"

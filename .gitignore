@@ -13,6 +13,7 @@
 *.iml
 *.ipr
 *.iws
+nb-configuration.xml
 
 # OS files
 .DS_Store
