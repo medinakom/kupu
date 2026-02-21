@@ -40,7 +40,6 @@ cp -r "$PROJECT_ROOT/kupu-starter/." "$TARGET_DIR/"
 rm -rf "$TARGET_DIR/target"
 rm -rf "$TARGET_DIR/.git"
 rm -f "$TARGET_DIR/nb-configuration.xml"
-rm -rf "$TARGET_DIR/src/main/webapp/WEB-INF/lib/"*
 
 # 2. Rename Directory Structure
 OLD_PATH=$(echo $DEFAULT_PACKAGE | tr . /)
@@ -51,12 +50,27 @@ move_package() {
     local base=$1
     local old_p=$2
     local new_p=$3
+
+    if [ "$old_p" == "$new_p" ]; then
+        return
+    fi
     
     if [ -d "$base/$old_p" ]; then
-        mkdir -p "$base/$new_p"
-        cp -r "$base/$old_p/." "$base/$new_p/"
-        # Clean up old empty folders upward but stop before src/main/java
+        # Use temp dir to avoid issues if new path is a sub-path of old path
+        local temp_dir=$(mktemp -d)
+        cp -r "$base/$old_p/." "$temp_dir/"
         rm -rf "$base/$old_p"
+        
+        # Clean up old empty folders upward
+        local current_dir=$(dirname "$base/$old_p")
+        while [ "$current_dir" != "$base" ] && [ "$current_dir" != "/" ] && [ "$current_dir" != "." ]; do
+            rmdir "$current_dir" 2>/dev/null || break
+            current_dir=$(dirname "$current_dir")
+        done
+        
+        mkdir -p "$base/$new_p"
+        cp -r "$temp_dir/." "$base/$new_p/"
+        rm -rf "$temp_dir"
     fi
 }
 
