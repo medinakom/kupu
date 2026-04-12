@@ -26,8 +26,13 @@ if [ -z "$NEW_PACKAGE" ]; then
 fi
 
 if [ -d "$TARGET_DIR" ]; then
-    echo "Cleaning up existing $TARGET_DIR..."
-    rm -rf "$TARGET_DIR"
+    if [ "$(ls -A "$TARGET_DIR")" ]; then
+        echo "❌ Error: Target directory $TARGET_DIR already exists and is not empty."
+        echo "Please remove it or provide a different app name."
+        exit 1
+    else
+        echo "Target directory $TARGET_DIR exists but is empty. Proceeding..."
+    fi
 fi
 
 echo "🚀 Generating Kupu Application: $APP_NAME"
@@ -75,7 +80,11 @@ move_package() {
 }
 
 move_package "$TARGET_DIR/src/main/java" "$OLD_PATH" "$NEW_PATH"
+move_package "$TARGET_DIR/src/main/resources" "$OLD_PATH" "$NEW_PATH"
 move_package "$TARGET_DIR/src/test/java" "$OLD_PATH" "$NEW_PATH"
+
+# Ensure resource package directory exists even if it was empty in starter
+mkdir -p "$TARGET_DIR/src/main/resources/$NEW_PATH"
 
 # 3. Global String Replacement
 find "$TARGET_DIR" -type f \( -name "*.java" -o -name "*.xml" -o -name "*.xhtml" -o -name "*.sh" -o -name "pom.xml" -o -name "*.properties" \) -exec sed -i "s/$DEFAULT_PACKAGE/$NEW_PACKAGE/g" {} +
