@@ -4,11 +4,34 @@
 # Usage: ./create-app.sh <app-name> [base-package]
 # Example: ./create-app.sh kupu-school id.my.mdn.kupu.school
 
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    echo "Kupu Application Generator"
+    echo "Usage: $(basename "$0") <app-name> [base-package]"
+    echo ""
+    echo "Options:"
+    echo "  -h, --help      Display this help message"
+    echo ""
+    echo "Arguments:"
+    echo "  app-name        Name of the new application (e.g. 'kupu-school'). A directory"
+    echo "                  with this name will be created as a sibling of the kupu/ folder."
+    echo "  base-package    Java base package for the application (optional)."
+    echo "                  If omitted, it is auto-derived from app-name:"
+    echo "                    kupu-school  →  id.my.mdn.kupu.school"
+    echo "                    myapp        →  id.my.mdn.kupu.myapp"
+    echo ""
+    echo "Examples:"
+    echo "  $(basename "$0") kupu-school"
+    echo "  $(basename "$0") kupu-school id.my.mdn.kupu.school"
+    echo "  $(basename "$0") myapp net.example.myapp"
+    exit 0
+fi
+
 APP_NAME=$1
 NEW_PACKAGE=$2
 
 if [ -z "$APP_NAME" ]; then
-    echo "Usage: ./create-app.sh <app-name> [base-package]"
+    echo "Usage: $(basename "$0") <app-name> [base-package]"
+    echo "Run '$(basename "$0") --help' for details and examples."
     exit 1
 fi
 
@@ -44,7 +67,10 @@ mkdir -p "$TARGET_DIR"
 cp -r "$PROJECT_ROOT/kupu-starter/." "$TARGET_DIR/"
 rm -rf "$TARGET_DIR/target"
 rm -rf "$TARGET_DIR/.git"
-rm -f "$TARGET_DIR/nb-configuration.xml"
+rm -f  "$TARGET_DIR/nb-configuration.xml"
+# css and locales are provided by kupu-core — remove them from the generated app
+rm -rf "$TARGET_DIR/src/main/webapp/WEB-INF/resources/css"
+rm -rf "$TARGET_DIR/src/main/webapp/WEB-INF/resources/locales"
 
 # 2. Rename Directory Structure
 OLD_PATH=$(echo $DEFAULT_PACKAGE | tr . /)
