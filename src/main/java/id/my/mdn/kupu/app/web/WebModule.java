@@ -12,7 +12,7 @@ import jakarta.inject.Named;
  *
  * @author Arief Prihasanto <aphasan57 at gmail.com>
  */
-@Named(value = "santri")
+@Named(value = "web")
 @ApplicationScoped
 public class WebModule extends AbstractModule {
 

@@ -20,6 +20,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ActionEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,8 @@ public class WebPage {
     private Long activeUstadzId;
     
     private String activeKajianId;
+    
+    private String searchTerm;
 
     private int pageSize;
     
@@ -63,6 +66,14 @@ public class WebPage {
         String strPageSize = FacesContext.getCurrentInstance().
                 getExternalContext().getRequestParameterMap().get("page-size");
         setPageSize(Integer.parseInt(strPageSize) + config.getInt("web.categoryPageSize"));
+    }
+    
+    public void gotoSearchResult(ActionEvent evt) {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/app/web/view/search.xhtml?s=" + searchTerm);
+        } catch (IOException ex) {
+            System.getLogger(WebPage.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 
     public int getPageSize() {
@@ -121,7 +132,7 @@ public class WebPage {
         Map<String, Object> filters = new HashMap<>();
         filters.put("kajian", kajian);         
         return kitabFacade.findAll(filters);
-    }  
+    }
     
     private String token;
 
@@ -152,5 +163,15 @@ public class WebPage {
         String streamUrl = config.getString("web.liveStreamingAddress");
         return streamUrl.toLowerCase().contains("youtube");
     }
+
+    public String getSearchTerm() {
+        return searchTerm;
+    }
+
+    public void setSearchTerm(String searchTerm) {
+        this.searchTerm = searchTerm;
+    }
+    
+    
 
 }

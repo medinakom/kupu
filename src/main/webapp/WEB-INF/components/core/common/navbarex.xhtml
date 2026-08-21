@@ -33,7 +33,7 @@
                             rendered="#{rolesChecker.isUserHasRoles('manage_security','manage_universe')}"
                             icon="pi pi-users" />
                 <p:menuitem value="Pengaturan"
-                            action="#{viewPage.gotoConfigs}"
+                            actionListener="#{viewPage.gotoConfigs}"
                             rendered="#{viewPage.isUserHasRoles('manage_configs','manage_universe')}"
                             icon="pi pi-cog" />
                 <p:separator />

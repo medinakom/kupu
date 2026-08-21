@@ -146,6 +146,9 @@
                                 </ui:insert>
                             </ui:insert>
                         </h:form>
+                        <h:form id="master-top-tools-frm" class="flex flex-wrap justify-content-start gap-2">
+                            <ui:insert name="master-top-tools" />
+                        </h:form>
                         <h:form id="master-overlay-filter-frm" rendered="#{masterFilterType eq 'overlay'}" class="overlay-filter">
                             <ui:include src="/WEB-INF/components/core/base/overlay-filter.xhtml" > 
                                 <ui:param name="filter" value="#{masterFilter}" />

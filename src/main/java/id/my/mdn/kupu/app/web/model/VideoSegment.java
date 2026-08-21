@@ -25,12 +25,14 @@ public class VideoSegment implements Serializable {
     @Id
     @ManyToOne
     private VideoKajian video;
-    
+
     @Id
     private String name;
-    
+
+    private String filePath;
+
     @Lob
-    private byte [] content;
+    private byte[] content;
 
     public String getName() {
         return name;
@@ -38,6 +40,14 @@ public class VideoSegment implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     public VideoKajian getVideo() {
@@ -55,5 +65,5 @@ public class VideoSegment implements Serializable {
     public void setContent(byte[] content) {
         this.content = content;
     }
-    
+
 }

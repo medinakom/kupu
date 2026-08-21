@@ -128,9 +128,16 @@ public class VideoPage {
     }
 
     public List<VideoKajian> getVideos() {
-        List<FilterData> filters = List.of(FilterData.by("kajian", kajian));
-        List<SorterData> sorters = List.of(SorterData.by("eventTime", Order.DESC));
-        List<VideoKajian> res = videoKajianFacade.findAll(0, getPageSize(), filters, sorters);
+        List<FilterData> filters = List.of(
+                FilterData.by("kajian", kajian), 
+                FilterData.by("published", true));
+        
+        List<SorterData> sorters = List.of(
+                SorterData.by("eventTime", Order.DESC));
+        
+        List<VideoKajian> res = videoKajianFacade.findAll(
+                0, getPageSize(), filters, sorters);
+        
         return res;
     }
 

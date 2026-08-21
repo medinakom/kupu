@@ -26,58 +26,63 @@
     <ui:define name="form">
 
         <div class="grid w-full p-3">
-            <div class="col-12 md:col-6">
-                
-                <div class="field ui-fluid">
-                    <p:outputLabel for="title" value="Judul" />
-                    <p:inputText id="title" class="block w-100" required="true"
-                                 value="#{viewPage.entity.title}" />
-                </div>
+            <div class="col-12 md:col-6 md:col-offset-3">
+                <ui:decorate template="/WEB-INF/components/core/base/formlet.xhtml">
+                    <ui:define name="fields">
+                        <div class="form-field">
+                            <p:outputLabel for="title" value="Judul" />
+                            <p:inputText id="title" class="block w-100" required="true"
+                                         value="#{viewPage.entity.title}" />
+                        </div>
 
-                <div class="field ui-fluid">
-                    <p:outputLabel for="notes" value="Keterangan" />
-                    <p:inputTextarea id="notes" class="w-100"
-                                     value="#{viewPage.entity.description}" />
-                </div>
-            
+                        <div class="form-field">
+                            <p:outputLabel for="notes" value="Keterangan" />
+                            <p:inputTextarea id="notes" class="w-100"
+                                             value="#{viewPage.entity.description}" />
+                        </div>
 
-                <div class="field ui-fluid">
-                    <p:outputLabel for="ustadz" value="Ustadz" />
-                    <p:selectOneMenu id="ustadz" class="w-100" required="true"
-                                     value="#{viewPage.entity.ustadz}"
-                                     converter="UstadzConverter" hideNoSelectionOption="false" >
-                        <f:selectItem noSelectionOption="true" itemLabel="Pilih Ustadz" itemValue="#{null}" />
-                        <f:selectItems value="#{ustadzSelectList.fetchedItems}"
-                                       var="ustadz" itemLabel="#{ustadz.fullname}"
-                                       itemValue="#{ustadz}" />
-                    </p:selectOneMenu>
-                </div>
 
-                <div class="field ui-fluid">
-                    <p:outputLabel for="category" value="Kategori" />
-                    <p:selectOneMenu id="category" class="w-100" required="true"
-                                     value="#{viewPage.entity.contentCategory}"
-                                     converter="ContentCategoryConverter" >
-                        <f:selectItem noSelectionOption="true" itemLabel="Pilih Kategori" itemValue="#{null}" />
-                        <f:selectItems value="#{contentCategoryList.fetchedItems}"
-                                       var="category" itemLabel="#{category.name}"
-                                       itemValue="#{category}" />
-                    </p:selectOneMenu>
-                </div>
-            
-                <div class="field ui-fluid">
-                    <p:outputLabel for="tags" value="Tags" />
-                    <p:selectCheckboxMenu id="tags" class="block inputfield w-100"
-                                          multiple="true" converter="TagConverter"
-                                          value="#{viewPage.entity.tags}" >
-                        <f:selectItems value="#{tagSelectList.fetchedItems}" />
-                    </p:selectCheckboxMenu>
-                </div>
+                        <div class="form-field">
+                            <p:outputLabel for="ustadz" value="Ustadz" />
+                            <p:selectOneMenu id="ustadz" class="w-100" required="true"
+                                             value="#{viewPage.entity.ustadz}"
+                                             converter="UstadzConverter" hideNoSelectionOption="false" >
+                                <f:selectItem noSelectionOption="true" itemLabel="Pilih Ustadz" itemValue="#{null}" />
+                                <f:selectItems value="#{ustadzSelectList.fetchedItems}"
+                                               var="ustadz" itemLabel="#{ustadz.fullname}"
+                                               itemValue="#{ustadz}" />
+                            </p:selectOneMenu>
+                        </div>
 
-                <div class="field ui-fluid">
-                    <p:toggleSwitch id="published" value="#{viewPage.entity.published}"/>
-                    <p:outputLabel for="published" value="Published"  class="ml-2"/>
-                </div>
+                        <div class="form-field">
+                            <p:outputLabel for="category" value="Kategori" />
+                            <p:selectOneMenu id="category" class="w-100" required="true"
+                                             value="#{viewPage.entity.contentCategory}"
+                                             converter="ContentCategoryConverter" >
+                                <f:selectItem noSelectionOption="true" itemLabel="Pilih Kategori" itemValue="#{null}" />
+                                <f:selectItems value="#{contentCategoryList.fetchedItems}"
+                                               var="category" itemLabel="#{category.name}"
+                                               itemValue="#{category}" />
+                            </p:selectOneMenu>
+                        </div>
+
+                        <div class="form-field">
+                            <p:outputLabel for="tags" value="Tags" />
+                            <p:selectCheckboxMenu id="tags" class="block inputfield w-100"
+                                                  multiple="true" converter="TagConverter"
+                                                  value="#{viewPage.entity.tags}" >
+                                <f:selectItems value="#{tagSelectList.fetchedItems}" />
+                            </p:selectCheckboxMenu>
+                        </div>
+
+                        <div class="form-field">
+                            <div class="flex align-items-center">
+                                <p:toggleSwitch id="published" value="#{viewPage.entity.published}"/>
+                                <p:outputLabel for="published" value="Published"  class="ml-2"/>
+                            </div>
+                        </div>
+                    </ui:define>
+                </ui:decorate>
             </div>
         </div>
     </ui:define>

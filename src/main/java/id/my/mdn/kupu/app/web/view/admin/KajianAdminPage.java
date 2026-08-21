@@ -19,6 +19,7 @@ import static id.my.mdn.kupu.core.base.view.widget.Selector.SINGLE;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 import jakarta.faces.event.AjaxBehaviorEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -124,6 +125,13 @@ public class KajianAdminPage extends Page implements Serializable {
         gotoChild(VideoEditorPage.class)
                 .addParam("v")
                 .withValues(video)
+                .open();
+    }
+    
+    public void goToKitab(ActionEvent evt) {
+        gotoChild(KitabAdminPage.class)
+                .addParam("kajian")
+                .withValues(kajianList.getSelected())
                 .open();
     }
 

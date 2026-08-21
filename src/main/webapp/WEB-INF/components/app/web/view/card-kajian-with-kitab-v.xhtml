@@ -11,7 +11,7 @@
                     </div>
                     <div class="flex-column">
                         <h:link value="#{kajian.title}" title="#{kajian.title}"                          
-                                outcome="/pages/kitab.xhtml?k=#{kajian.id}"                               
+                                outcome="/app/web/view/kitab.xhtml?k=#{kajian.id}"                               
                                 class="d-block fw-bold stretched-link text-decoration-none primary-text" />
                         <h:outputText value="#{kajianRetriever.getKitabCountByKajian(kajian)} Kitab"
                                       class="primary-text" />

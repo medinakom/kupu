@@ -25,8 +25,8 @@
                               icon="pi pi-angle-left" class="ui-button-flat" />
 
             <p:selectOneMenu value="#{pager.offset}" converter="LongConverter" > 
-                <f:selectItems value="#{pager.pageOptions}" var="page" 
-                               itemValue="#{page}" />
+                <f:selectItems value="#{pager.pageOptions}" var="pg" 
+                               itemValue="#{pg}" />
                 <p:ajax listener="#{pager.onPaging}"
                         update="#{pagerListener} @form"
                         oncomplete="#{pagerCallback}"    />

@@ -11,7 +11,6 @@ import id.my.mdn.kupu.core.base.view.FormPage;
 import jakarta.enterprise.context.ConversationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import java.time.LocalDateTime;
 
 /**
  *
@@ -31,11 +30,6 @@ public class KajianEditorPage extends FormPage<Kajian> {
 
     @Override
     protected Result<String> save(Kajian entity) {
-        if (entity.isPublished()) {
-            entity.setPublishedDate(LocalDateTime.now());
-        } else {
-            entity.setPublishedDate(null);
-        }
         return dao.create(entity);
     }
 

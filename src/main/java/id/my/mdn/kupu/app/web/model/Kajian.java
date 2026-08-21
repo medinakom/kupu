@@ -21,15 +21,15 @@ import java.util.List;
 public class Kajian extends Content {
 
     private static final long serialVersionUID = 1L;
-    
+
     @ManyToOne
-    private Ustadz ustadz;    
-    
-    @OneToMany(mappedBy = "kajian", cascade=CascadeType.ALL)
+    private Ustadz ustadz;
+
+    @OneToMany(mappedBy = "kajian", cascade = CascadeType.ALL)
     @OrderBy("eventTime ASC")
     private List<VideoKajian> videos;
-    
-    @OneToMany(mappedBy = "kajian")
+
+    @OneToMany(mappedBy = "kajian", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Kitab> kitab;
 
     public Ustadz getUstadz() {
@@ -55,11 +55,11 @@ public class Kajian extends Content {
     public void setKitab(List<Kitab> kitab) {
         this.kitab = kitab;
     }
-    
+
     @PrePersist
     @Override
     protected void prePersist() {
         super.prePersist();
     }
-    
+
 }

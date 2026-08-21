@@ -6,6 +6,8 @@ package id.my.mdn.kupu.app.web.service;
 
 import id.my.mdn.kupu.app.web.model.VideoKajian;
 import static id.my.mdn.kupu.app.web.service.MediaService.VIDEO;
+import id.my.mdn.kupu.app.web.util.FileSystem;
+import id.my.mdn.kupu.app.web.util.ytdlp.YoutubeService;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -35,6 +37,12 @@ public class YoutubeUploader implements Serializable {
 
     @Inject
     private MediaService mediaService;
+    
+    @Inject
+    private YoutubeService ytService;
+    
+    @Inject
+    private FileSystem fs;
 
     @Inject
     private Configuration config;
@@ -45,37 +53,40 @@ public class YoutubeUploader implements Serializable {
 
     public void download(Path dir, String id, String videoUrl) throws Exception {
 
-        download(
-                "/usr/local/bin/yt-dlp",
-                "-v",
-                "--cookies", config.getString("web.ytCookies"),
-                "--no-part",
-                "-t", "mp4",
-                "--no-playlist",
-                "--max-downloads", "1",
-                "--force-overwrites",
-                "-P", dir.toString(),
-                "-o", id + ".mp4",
-                videoUrl
-        );
+//        download(
+//                "/usr/local/bin/yt-dlp",
+//                "-v",
+//                "--cookies", config.getString("web.ytCookies"),
+//                "--no-part",
+//                "-t", "mp4",
+//                "--no-playlist",
+//                "--max-downloads", "1",
+//                "--force-overwrites",
+//                "-P", dir.toString(),
+//                "-o", id + ".mp4",
+//                videoUrl
+//        );
+        
+        ytService.downloadBestFormatToTemp(videoUrl, fs.createFile(dir, id + ".mp4"));
+        
     }
 
-    private void download(String... command) throws Exception {
-
-        ProcessBuilder processBuilder = new ProcessBuilder()
-                .command(command);
-
-        processBuilder.redirectErrorStream(true);
-        Process process = processBuilder.start();
-        try (BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            String line;
-            while ((line = r.readLine()) != null) {
-                System.out.println("YT-DLP: " + line);
-            }
-        }
-        int waitFor = process.waitFor();
-//        System.out.println("WET FOR: " + waitFor);
-    }
+//    private void download(String... command) throws Exception {
+//
+//        ProcessBuilder processBuilder = new ProcessBuilder()
+//                .command(command);
+//
+//        processBuilder.redirectErrorStream(true);
+//        Process process = processBuilder.start();
+//        try (BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+//            String line;
+//            while ((line = r.readLine()) != null) {
+//                System.out.println("YT-DLP: " + line);
+//            }
+//        }
+//        int waitFor = process.waitFor();
+////        System.out.println("WET FOR: " + waitFor);
+//    }
 
     public void process(VideoKajian videoKajian, Object videoSrc) {
 

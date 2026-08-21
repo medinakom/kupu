@@ -23,34 +23,40 @@
     <ui:define name="form">
 
         <div class="grid w-full p-3">
-            <div class="col-12 md:col-6">
+            <div class="col-12 md:col-6 md:col-offset-3">
+                <ui:decorate template="/WEB-INF/components/core/base/formlet.xhtml">
+                    <ui:define name="fields">
 
-                <div class="field ui-fluid">
-                    <p:outputLabel for="kajian" value="Kajian" />
-                    <p:inputText id="kajian" class="form-control" readonly="true"
-                                     value="#{viewPage.entity.kajian.title}" />
-                </div>
+                        <div class="form-field">
+                            <p:outputLabel for="kajian" value="Kajian" />
+                            <p:inputText id="kajian" class="form-control" readonly="true"
+                                         value="#{viewPage.entity.kajian.title}" />
+                        </div>
 
-                <div class="field ui-fluid">
-                    <p:outputLabel for="event-time" value="Waktu" class="w-100" />
-                    <p:datePicker id="event-time" pattern="dd/MM/yyyy HH:mm" timeInput="true" flex="true"
-                                  showOnFocus="false" showIcon="true" yearNavigator="true"
-                                  monthNavigator="true" yearRange="2005:2050" showTime="true" 
-                                  value="#{viewPage.entity.eventTime}"  />
-                </div>
+                        <div class="form-field">
+                            <p:outputLabel for="event-time" value="Waktu" class="w-100" />
+                            <p:datePicker id="event-time" pattern="dd/MM/yyyy HH:mm" timeInput="true" flex="true"
+                                          showOnFocus="false" showIcon="true" yearNavigator="true"
+                                          monthNavigator="true" yearRange="2005:2050" showTime="true" 
+                                          value="#{viewPage.entity.eventTime}"  />
+                        </div>
 
-                <div class="field ui-fluid">
-                    <p:outputLabel for="notes" value="Keterangan" />
-                    <p:inputTextarea id="notes" class="form-control"
-                                     value="#{viewPage.entity.notes}" />
-                </div>
+                        <div class="form-field">
+                            <p:outputLabel for="notes" value="Keterangan" />
+                            <p:inputTextarea id="notes" class="form-control"
+                                             value="#{viewPage.entity.notes}" />
+                        </div>
 
-                <div class="field ui-fluid">
-                    <p:outputLabel for="published" value="Published" />
-                    <p:toggleSwitch id="published" 
-                                    value="#{viewPage.entity.published}">
-                    </p:toggleSwitch>
-                </div>
+                        <div class="form-field">
+                            <div class="flex align-items-center">
+                                <p:toggleSwitch id="published" value="#{viewPage.entity.published}" immediate="true">
+                                    <p:ajax process="@this" />
+                                </p:toggleSwitch>
+                                <p:outputLabel for="published" value="Published"  class="ml-2"/>
+                            </div>
+                        </div>
+                    </ui:define>
+                </ui:decorate>
             </div>
         </div>
     </ui:define>

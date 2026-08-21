@@ -7,11 +7,13 @@ package id.my.mdn.kupu.app.web.view.list;
 import id.my.mdn.kupu.app.web.dao.KajianFacade;
 import id.my.mdn.kupu.app.web.model.Kajian;
 import id.my.mdn.kupu.app.web.util.FileSystem;
+import id.my.mdn.kupu.app.web.model.VideoKajian;
+import id.my.mdn.kupu.app.web.service.MediaService;
+import id.my.mdn.kupu.app.web.view.filter.KajianFilter;
 import id.my.mdn.kupu.core.base.dao.AbstractFacade.DefaultChecker;
 import id.my.mdn.kupu.core.base.util.FilterTypes.FilterData;
 import id.my.mdn.kupu.core.base.util.Result;
 import id.my.mdn.kupu.core.base.view.widget.AbstractMutablePagedValueList;
-import id.my.mdn.kupu.core.base.view.widget.CommonFilter;
 import id.my.mdn.kupu.core.base.view.widget.SorterData;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
@@ -31,10 +33,13 @@ public class KajianList extends AbstractMutablePagedValueList<Kajian> {
     private FileSystem fs;
 
     @Inject
+    private MediaService mediaService;
+
+    @Inject
     private KajianFacade dao;
 
     @Inject
-    private CommonFilter filterContent;
+    private KajianFilter filterContent;
 
     public KajianList() {
         super(Kajian.class);
@@ -72,6 +77,14 @@ public class KajianList extends AbstractMutablePagedValueList<Kajian> {
 
     @Override
     protected Result<String> deleteInternal(Kajian entity) {
+        for (VideoKajian video : entity.getVideos()) {
+            try {
+                mediaService.deleteMedia(video);
+            } catch (IOException ex) {
+                System.getLogger(KajianList.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        }
+
         Result<String> result = dao.remove(entity);
 
         try {
@@ -80,7 +93,7 @@ public class KajianList extends AbstractMutablePagedValueList<Kajian> {
         } catch (IOException ex) {
             System.getLogger(KajianList.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        
+
         return result;
 
     }

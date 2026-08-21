@@ -29,7 +29,7 @@ public class KitabConverter implements Converter<Kitab> {
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Kitab value) {
-        return value.getId();
+        return value != null ? String.valueOf(value) : null;
     }
     
 }

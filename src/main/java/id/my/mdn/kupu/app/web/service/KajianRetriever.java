@@ -14,11 +14,14 @@ import id.my.mdn.kupu.app.web.model.Kitab;
 import id.my.mdn.kupu.app.web.model.Ustadz;
 import id.my.mdn.kupu.app.web.model.VideoKajian;
 import id.my.mdn.kupu.core.base.util.FilterTypes.FilterData;
+import id.my.mdn.kupu.core.base.view.annotation.SorterField;
+import id.my.mdn.kupu.core.base.view.widget.SorterData;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ActionEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.configuration2.Configuration;
@@ -79,7 +82,23 @@ public class KajianRetriever {
     }
 
     public List<Kajian> getTerbaru() {
-        return kajianFacade.findAll(0, config.getInt("web.newestContentSize"), null);
+        List<FilterData> filters = new ArrayList<>();
+        filters.add(FilterData.by("published", true));
+        
+        List<SorterData> sorters = List.of(
+                SorterData.by("publishedDate", SorterField.Order.DESC));
+        
+        return kajianFacade.findAll(0, config.getInt("web.newestContentSize"), filters, sorters);
+    }
+
+    public List<VideoKajian> getVideoTerbaru() {
+        List<FilterData> filters = new ArrayList<>();
+        filters.add(FilterData.by("published", true));
+        
+        List<SorterData> sorters = List.of(
+                SorterData.by("publishedDate", SorterField.Order.DESC));
+        
+        return videoFacade.findAll(0, config.getInt("web.newestContentSize"), filters, sorters);
     }
 
     public List<Kajian> getTerpenting() {
@@ -96,6 +115,13 @@ public class KajianRetriever {
         List<Kajian> ret = kajianFacade.findAll(List.of(FilterData.by("contentCategory", category)));
         return ret;
     }
+
+    public List<Kajian> getByKeyword(String searchTerm) {
+        List<Kajian> ret = kajianFacade.findAll(
+                List.of(FilterData.by("title", searchTerm))
+        );
+        return ret;
+    }
     
     public List<Ustadz> getAsatidz() {
         return ustadzFacade.findAll();
@@ -107,7 +133,10 @@ public class KajianRetriever {
     }
 
     public Long getKajianCountByUstadz(Long id) {
-        return kajianFacade.countAll(List.of(FilterData.by("ustadz", id)));
+        List<FilterData> filters = new ArrayList<>();
+        filters.add(FilterData.by("ustadz", id));
+        filters.add(FilterData.by("published", Boolean.TRUE));
+        return kajianFacade.countAll(filters);
     }
 
     public Long getVideoCountByKajian(Kajian kajian) {

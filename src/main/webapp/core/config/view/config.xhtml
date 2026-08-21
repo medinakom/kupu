@@ -13,7 +13,7 @@
         <ui:include src="/WEB-INF/components/core/base/meta/page.xhtml"/>
 
         <ui:param name="dataView" value="#{viewPage.configList}" />
-        <ui:param name="contentId" value=":data-frm" />  
+        <ui:param name="contentId" value=":data-frm:#{dataView.name}" />  
         <ui:param name="notool" value="true" />
 
         <ui:param name="filter" value="#{dataView.filter}" />
@@ -33,7 +33,6 @@
     </f:metadata>
 
     <ui:define name="crud-tools" />
-    <ui:define name="crud-context-menu" />
 
     <ui:define name="content">
         <h:form id="data-frm">

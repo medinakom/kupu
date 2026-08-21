@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core" 
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets">
+    <f:view transient="true" >
+        <h:head>
+            <!-- Required meta tags -->
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+            <!-- Bootstrap CSS -->
+            <h:outputStylesheet library="css" name="bootstrap.min.css" />
+            <h:outputStylesheet library="css" name="bootstrap-icons.css" />
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
+            <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&amp;family=Roboto+Slab:wght@800&amp;display=swap" rel="stylesheet" />
+            <h:outputStylesheet library="css" name="video-js.css" />
+            <h:outputStylesheet library="css" name="colors.module.css" />
+            <h:outputStylesheet library="css" name="theme.css" />
+            <h:outputStylesheet library="css" name="theme.dark.css" />
+            <h:outputStylesheet library="css" name="theme.light.css" />
+            <h:outputStylesheet library="css" name="tokens.css" />
+            <h:outputStylesheet library="css" name="typography.module.css" />
+            <ui:insert name="stylesheet" />
+
+            <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon.png']}"/>
+
+            <title><ui:insert name="title">#{brand} - #{description}</ui:insert></title>
+
+        </h:head>
+        <h:body class="background">
+
+            <ui:decorate template="/WEB-INF/components/app/web/menu/main-menu.xhtml"/>
+
+            <div class="container">
+                <ui:insert name="content"/>
+            </div>
+
+            <h:outputScript library="js" name="bootstrap.bundle.min.js" />
+            <ui:insert name="script" />
+        </h:body>
+    </f:view>
+</html>
+

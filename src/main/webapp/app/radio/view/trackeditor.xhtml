@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/WEB-INF/templates/editor-page.xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="primefaces"
+                xmlns:h="jakarta.faces.html">
+
+    <f:metadata>
+        <ui:param name="primaryTitle" value="Editor Playlist" />
+        <ui:param name="viewPage" value="#{trackEditorPage}" /> 
+        <ui:include src="/WEB-INF/components/core/base/meta/page.xhtml"/>
+
+        <ui:param name="notool" value="true" />
+        <ui:param name="nofilter" value="true"/>          
+
+        <f:viewParam name="entity" value="#{viewPage.entity}" converter="TrackConverter" transient="true" />
+        <f:viewParam name="previous" value="#{viewPage.previousTrack}" converter="TrackConverter" transient="true" />
+        <f:viewParam name="selectedKajian" value="#{viewPage.selectedKajian}" converter="KajianConverter" transient="true" />
+        <f:viewParam name="selectedVideo" value="#{viewPage.selectedVideo}" converter="VideoKajianConverter" transient="true" />
+
+        <f:viewAction action="#{viewPage.load}" />
+    </f:metadata>
+
+    <ui:define name="module-menu">
+        <ui:include src="/WEB-INF/components/app/web/module-menu.xhtml" />
+    </ui:define>
+
+    <ui:define name="content-header" />
+
+    <ui:define name="form">
+
+        <div class="grid w-full p-3">
+            <div class="col-12 md:col-6 md:col-offset-3">
+                <ui:decorate template="/WEB-INF/components/core/base/formlet.xhtml">
+                    <ui:define name="fields">
+                        <div class="form-field">
+                            <p:outputLabel for="kajian" value="Kajian" />
+                            <p:selectOneMenu id="kajian" class="w-100" required="true"
+                                             value="#{viewPage.selectedKajian}" var="i"
+                                             converter="KajianConverter"  >
+                                <f:selectItem itemLabel="Pilih Kajian" itemValue="#{null}" itemDisabled="true" />
+                                <f:selectItems value="#{viewPage.kajianList.fetchedItems}"
+                                               var="kajian" itemLabel="#{kajian.title} (#{kajian.ustadz.fullname})"
+                                               itemValue="#{kajian}" />
+                                <p:column>
+                                    <div class="flex flex-column">
+                                        <h:outputText value="#{i.title}" />
+                                        <h:outputText value="#{i.ustadz.fullname}" class="text-sm font-italic" />
+                                    </div>
+                                </p:column>
+                                <p:ajax update="subkajian" oncomplete="updateAddress()"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="form-field">
+                            <p:outputLabel for="subkajian" value="Sub Kajian" />
+                            <p:selectOneMenu id="subkajian" class="w-100" required="true"
+                                             value="#{viewPage.selectedVideo}"
+                                             converter="VideoKajianConverter" hideNoSelectionOption="false" >
+                                <f:selectItem itemLabel="Pilih Sub Kajian" itemValue="#{null}" />
+                                <f:selectItems value="#{viewPage.videoList.fetchedItems}"
+                                               var="subkajian" itemLabel="#{subkajian.notes}"
+                                               itemValue="#{subkajian}" />
+                                <p:ajax oncomplete="updateAddress()" />
+                            </p:selectOneMenu>
+                        </div>
+                    </ui:define>
+                </ui:decorate>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

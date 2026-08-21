@@ -1,6 +1,7 @@
 package id.my.mdn.kupu.core.base.util;
 
 import id.my.mdn.kupu.core.base.view.Page;
+import id.my.mdn.kupu.core.base.view.annotation.View;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import java.util.Arrays;
@@ -69,17 +70,35 @@ public final class ModuleUtil {
     }
 
     public static String getPage(Class<? extends Page> pageClass) {
+        String viewPath = getViewPath(pageClass);
+        if (viewPath != null) {
+            String contextPath = "";
+            try {
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                contextPath = ec.getRequestContextPath();
+            } catch (Exception e) {
+                // FacesContext might not be available in tests
+            }
+            return contextPath + viewPath;
+        }
+        return null;
+    }
+
+    public static String getViewPath(Class<? extends Page> pageClass) {
+        View viewAnnotation = pageClass.getAnnotation(View.class);
+        if (viewAnnotation != null) {
+            return viewAnnotation.value();
+        }
 
         Matcher matcher = PAGE_PATTERN.matcher(pageClass.getCanonicalName());
         if (matcher.matches()) {
-            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
             String viewdir = matcher.group("viewdir");
             String view = matcher.group("view");
-            return ec.getRequestContextPath() + (viewdir + view).replaceAll("\\.", "/").toLowerCase() + ".xhtml";
-        } else {
-            return null;
+            if (viewdir != null && view != null) {
+                return (viewdir + view).replaceAll("\\.", "/").toLowerCase() + ".xhtml";
+            }
         }
-
+        return null;
     }
     
     public static ModuleInfo getModuleInfo(Class cls) {

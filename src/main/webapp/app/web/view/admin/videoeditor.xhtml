@@ -79,15 +79,7 @@
                          title="Upload video dari file di server" />
     </ui:define>
 
-    <ui:define name="other-tools">
-
-        <p:dialog id="upload-dlg" widgetVar="uploadDlg" dynamic="true" modal="true" closable="true" header="Upload Video">
-            <h:form enctype="multipart/form-data">
-                <p:fileUpload mode="advanced" accept="/(\.|\/)(mp4)$/"
-                              listener="#{viewPage.handleFileUpload}"
-                              oncomplete="PF('uploadDlg').hide()" />
-            </h:form>
-        </p:dialog>
+    <ui:define name="other-nonview">
 
         <h:form>
 
@@ -227,7 +219,15 @@
                     </div>
                 </div>
             </h:form>
-        </p:confirmDialog>        
+        </p:confirmDialog>   
+
+        <p:dialog id="upload-dlg" widgetVar="uploadDlg" dynamic="true" modal="true" closable="true" header="Upload Video">
+            <h:form enctype="multipart/form-data">
+                <p:fileUpload mode="advanced" accept="/(\.|\/)(mp4)$/"
+                              listener="#{viewPage.handleFileUpload}"
+                              oncomplete="PF('uploadDlg').hide()" />
+            </h:form>
+        </p:dialog>     
 
         <p:dialog id="yt-dl-dlg" widgetVar="youtubeDownloadDlg" dynamic="true"
                   modal="true" positionType="absolute" 

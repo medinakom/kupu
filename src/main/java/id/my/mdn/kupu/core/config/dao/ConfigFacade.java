@@ -93,7 +93,6 @@ public class ConfigFacade extends AbstractFacade<Config> {
 
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public String getValue(String mixedKey) {
 
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();

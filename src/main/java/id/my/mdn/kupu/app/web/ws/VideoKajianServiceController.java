@@ -18,6 +18,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -41,19 +42,29 @@ public class VideoKajianServiceController {
 
     @GET
     @Path("ping")
-    @Produces({MediaType.TEXT_PLAIN})
+    @Produces({ MediaType.TEXT_PLAIN })
     public String ping() {
         return "pong";
     }
 
     @GET
     @Path("{video}/stream")
-    @Produces({MediaType.APPLICATION_OCTET_STREAM})
+    @Produces({ MediaType.APPLICATION_OCTET_STREAM })
     public Response getPlaylist(@PathParam("video") String video) {
         VideoSegment segment = segmentFacade.find(new VideoSegmentId(video, "stream.m3u8"));
         if (segment == null) {
             return Response.noContent().build();
         }
+
+        if (segment.getFilePath() != null) {
+            File file = new File(segment.getFilePath());
+            if (file.exists()) {
+                return Response.ok(file)
+                        .header("Content-Type", "application/x-mpegURL")
+                        .build();
+            }
+        }
+
         return Response.ok(segment.getContent())
                 .header("Content-Type", "application/x-mpegURL")
                 .build();
@@ -61,12 +72,22 @@ public class VideoKajianServiceController {
 
     @GET
     @Path("{video}/{segment}")
-    @Produces({MediaType.APPLICATION_OCTET_STREAM})
+    @Produces({ MediaType.APPLICATION_OCTET_STREAM })
     public Response getSegment(@PathParam("video") String video, @PathParam("segment") String segmentName) {
         VideoSegment segment = segmentFacade.find(new VideoSegmentId(video, segmentName));
         if (segment == null) {
             return Response.noContent().build();
         }
+
+        if (segment.getFilePath() != null) {
+            File file = new File(segment.getFilePath());
+            if (file.exists()) {
+                return Response.ok(file)
+                        .header("Content-Type", "video/MP2T")
+                        .build();
+            }
+        }
+
         return Response.ok(segment.getContent())
                 .header("Content-Type", "video/MP2T")
                 .build();
@@ -80,7 +101,7 @@ public class VideoKajianServiceController {
 
     @GET
     @Path("kitab/{id}")
-    @Produces({MediaType.APPLICATION_OCTET_STREAM})
+    @Produces({ MediaType.APPLICATION_OCTET_STREAM })
     public Response getKitabContant(@PathParam("id") String kitabId) {
         Kitab kitab = kitabFacade.find(kitabId);
         byte[] content = contentFacade.getContent(kitab.getContent().getId());
@@ -94,7 +115,7 @@ public class VideoKajianServiceController {
 
     @GET
     @Path("live/stream")
-    @Produces({MediaType.APPLICATION_OCTET_STREAM})
+    @Produces({ MediaType.APPLICATION_OCTET_STREAM })
     public Response getLive() {
         try {
             HttpClient client = HttpClient.newHttpClient();
@@ -117,7 +138,7 @@ public class VideoKajianServiceController {
 
     @GET
     @Path("live/{num}/stream.m3u8")
-    @Produces({MediaType.APPLICATION_OCTET_STREAM})
+    @Produces({ MediaType.APPLICATION_OCTET_STREAM })
     public Response getLivePlaylist(@PathParam("num") String num) {
 
         try {
@@ -141,7 +162,7 @@ public class VideoKajianServiceController {
 
     @GET
     @Path("live/{num}/{name}.ts")
-    @Produces({MediaType.APPLICATION_OCTET_STREAM})
+    @Produces({ MediaType.APPLICATION_OCTET_STREAM })
     public Response getLiveSegment(@PathParam("num") String num, @PathParam("name") String chunkName) {
 
         if (!chunkName.contains("offline")) {

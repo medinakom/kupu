@@ -24,7 +24,7 @@ public class Kitab extends Content {
     @ManyToOne
     private Kajian kajian;
     
-    @OneToOne(mappedBy = "kitab", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "kitab", cascade = CascadeType.ALL, orphanRemoval = true)
     private KitabContent content;
 
     public String getAuthor() {

@@ -15,6 +15,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.io.File;
 
 /**
  *
@@ -29,7 +30,7 @@ public class AudioKajianServiceController {
 
     @GET
     @Path("ping")
-    @Produces({MediaType.TEXT_PLAIN})
+    @Produces({ MediaType.TEXT_PLAIN })
     public String ping() {
         return "pong";
     }
@@ -38,10 +39,28 @@ public class AudioKajianServiceController {
 
     @GET
     @Path("{video}/stream")
-    @Produces({MediaType.APPLICATION_OCTET_STREAM})
+    @Produces({ MediaType.APPLICATION_OCTET_STREAM })
     public Response getPlaylist(@PathParam("video") String video) {
         AudioSegment segment = segmentFacade.find(new AudioSegmentId(video, "stream.m3u8"));
-        if(segment == null) return Response.noContent().build();
+        if (segment == null)
+            return Response.noContent().build();
+
+        if (segment.getFilePath() != null) {
+            File file = new File(segment.getFilePath());
+            if (file.exists()) {
+                return Response.ok(file)
+                        .header("Content-Type", "application/x-mpegURL")
+                        .header("Access-Control-Allow-Origin", "*")
+                        .header("Access-Control-Allow-Headers", "origin,accept,content-type")
+                        .header("Access-Control-Expose-Headers", "location,info")
+                        .header("Access-Control-Allow-Credentials", "true")
+                        .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                        .header("Access-Control-Max-Age", MAX_AGE)
+                        .header("x-responded-by", "cors-response-filter")
+                        .build();
+            }
+        }
+
         return Response.ok(segment.getContent())
                 .header("Content-Type", "application/x-mpegURL")
                 .header("Access-Control-Allow-Origin", "*")
@@ -56,10 +75,28 @@ public class AudioKajianServiceController {
 
     @GET
     @Path("{video}/{segment}")
-    @Produces({MediaType.APPLICATION_OCTET_STREAM})
+    @Produces({ MediaType.APPLICATION_OCTET_STREAM })
     public Response getSegment(@PathParam("video") String video, @PathParam("segment") String segmentName) {
         AudioSegment segment = segmentFacade.find(new AudioSegmentId(video, segmentName));
-        if(segment == null) return Response.noContent().build();
+        if (segment == null)
+            return Response.noContent().build();
+
+        if (segment.getFilePath() != null) {
+            File file = new File(segment.getFilePath());
+            if (file.exists()) {
+                return Response.ok(file)
+                        .header("Content-Type", "video/MP2T")
+                        .header("Access-Control-Allow-Origin", "*")
+                        .header("Access-Control-Allow-Headers", "origin,accept,content-type")
+                        .header("Access-Control-Expose-Headers", "location,info")
+                        .header("Access-Control-Allow-Credentials", "true")
+                        .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                        .header("Access-Control-Max-Age", MAX_AGE)
+                        .header("x-responded-by", "cors-response-filter")
+                        .build();
+            }
+        }
+
         return Response.ok(segment.getContent())
                 .header("Content-Type", "video/MP2T")
                 .header("Access-Control-Allow-Origin", "*")

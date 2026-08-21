@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.Application;
  * Configures Jakarta RESTful Web Services for the application.
  * @author Juneau
  */
-@ApplicationPath("ws")
+@ApplicationPath("api")
 public class KupuRestConfiguration extends Application {
     
 }

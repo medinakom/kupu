@@ -19,8 +19,8 @@
 
         <ui:param name="masterFilter" value="#{masterDataView.filter}" />
         <ui:param name="masterFilterType" value="overlay" />
-        <ui:param name="masterFilterUi" value="/WEB-INF/components/core/common/common-filterui.xhtml" /> 
-        <ui:include src="/WEB-INF/components/core/common/meta/common-filterui.xhtml" >
+        <ui:param name="masterFilterUi" value="/WEB-INF/components/app/web/filter/kajian-filterui.xhtml" /> 
+        <ui:include src="/WEB-INF/components/app/web/filter/meta/kajian-filterui.xhtml" >
             <ui:param name="filter" value="#{masterFilter}" />
         </ui:include>
         <ui:param name="masterPager" value="#{masterDataView.pager}" />
@@ -57,6 +57,12 @@
         <ui:include src="/WEB-INF/components/app/web/module-menu.xhtml" />
     </ui:define>
 
+    <ui:define name="master-top-tools">
+        <p:commandButton icon="pi pi-book" actionListener="#{kajianAdminPage.goToKitab}"
+                         immediate="true" title="Kitab"                                                                         
+                         disabled="#{masterDataView.selected eq null}" class="ui-button-flat" />
+    </ui:define>
+
     <ui:define name="master">
         <h:form id="master-frm">
             <ui:decorate template="/WEB-INF/components/app/web/list/kajianlist.xhtml" >
@@ -64,6 +70,10 @@
                 <ui:param name="selectCallback" value="refreshMasterCasing();refreshDetail()" />
                 <ui:param name="updateCallback" value="refreshMaster(); refreshDetail()" />
                 <ui:param name="tableStyle" value="noheader" />
+
+                <ui:define name="context-menu">
+                    <p:menuitem value="Kitab" icon="pi pi-book" actionListener="#{kajianAdminPage.goToKitab}" immediate="true" />
+                </ui:define>
             </ui:decorate>
         </h:form>
     </ui:define>

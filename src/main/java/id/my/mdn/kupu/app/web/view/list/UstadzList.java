@@ -10,10 +10,11 @@ import id.my.mdn.kupu.core.base.dao.AbstractFacade.DefaultChecker;
 import id.my.mdn.kupu.core.base.util.FilterTypes.FilterData;
 import id.my.mdn.kupu.core.base.util.Result;
 import id.my.mdn.kupu.core.base.view.widget.AbstractMutablePagedValueList;
+import id.my.mdn.kupu.core.base.view.widget.CommonFilter;
 import id.my.mdn.kupu.core.base.view.widget.SorterData;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import java.util.List;
 import java.util.Map;
 
@@ -21,15 +22,22 @@ import java.util.Map;
  *
  * @author aphasan
  */
-@Named(value = "lazyUstadzDataModel")
 @Dependent
 public class UstadzList extends AbstractMutablePagedValueList<Ustadz> {
 
     @Inject
     private UstadzFacade dao;
+    
+    @Inject
+    private CommonFilter filterContent;
 
     public UstadzList() {
         super(Ustadz.class);
+    }
+
+    @PostConstruct
+    public void init() {
+        filter.setContent(filterContent);
     }
 
     @Override

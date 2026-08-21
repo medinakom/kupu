@@ -1,0 +1,299 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" template="/WEB-INF/templates/explorer.xhtml"
+                xmlns:f="jakarta.faces.core" xmlns:h="jakarta.faces.html" xmlns:ui="jakarta.faces.facelets" xmlns:p="primefaces">
+
+    <f:metadata>
+        <ui:param name="title" value="Radio" />
+
+        <ui:param name="viewPage" value="#{radioPage}" />
+        <ui:include src="/WEB-INF/components/core/base/meta/page.xhtml" />
+
+        <ui:param name="masterTitle" value="Playlist" />
+        <ui:param name="masterDataView" value="#{viewPage.trackList}" />
+        <ui:param name="masterContentId" value=":master-frm:#{masterDataView.name}" />
+
+        <ui:param name="masterFilter" value="#{masterDataView.filter}" />
+        <ui:param name="masterFilterType" value="overlay" />
+        <ui:param name="masterFilterUi" value="/WEB-INF/components/core/common/common-filterui.xhtml" />
+        <ui:include src="/WEB-INF/components/core/common/meta/common-filterui.xhtml">
+            <ui:param name="filter" value="#{masterFilter}" />
+        </ui:include>
+        <ui:param name="masterPager" value="#{masterDataView.pager}" />
+        <f:viewParam name="ms" value="#{masterDataView.selectionInternal}" converter="TrackConverter"
+                     transient="true" />
+        <f:viewParam name="mp" value="#{masterPager.pageSize}" converter="LongConverter" transient="true" />
+        <f:viewParam name="mo" value="#{masterPager.offset}" converter="LongConverter" transient="true" />
+
+        <ui:param name="detailTitle" value="Broadcaster" />
+        <ui:param name="detailContentId" value=":detail-frm" />
+
+    </f:metadata>
+
+    <ui:define name="parent-nav">
+        <p:commandButton action="#{webNavigator.open('Home', '')}" class="ui-button-flat" immediate="true" ajax="false"
+                         icon="pi pi-home" />
+    </ui:define>
+
+    <ui:define name="module-menu">
+        <ui:include src="/WEB-INF/components/app/web/module-menu.xhtml" />
+    </ui:define>
+
+    <ui:define name="master">
+        <h:form id="master-frm">            
+            <ui:decorate template="/WEB-INF/components/app/radio/list/tracklist.xhtml">
+                <ui:param name="dataView" value="#{masterDataView}" />
+                <ui:param name="tableStyle" value="noheader" />
+                <ui:param name="rowStyle"
+                          value="#{playlistManager.currentTrack ne null and data.id eq playlistManager.currentTrack.id ? 'font-bold surface-200 text-blue-600' : ''}" />
+            </ui:decorate>
+        </h:form>
+        <h:form>
+            <p:poll widgetVar="playerPoll" interval="5" autoStart="false" async="true" oncomplete="refreshMasterContent()" />
+        </h:form>
+    </ui:define>
+    
+    <ui:define name="detail-crud-tools" />
+
+    <ui:define name="detail-top-tools">
+        <!-- Playlist Mode Start -->
+        <p:commandButton action="#{broadcastEngine.start(masterDataView.selected)}" value="Auto-DJ"
+                         disabled="#{broadcastEngine.running and !broadcastEngine.paused}" ariaLabel="play" icon="pi pi-play"
+                         class="ui-button-flat" update="@form #{detailContentId}"
+                         oncomplete="startMonitor();PF('playerPoll').start()" />
+
+        <!-- Live Mode Start -->
+        <p:commandButton actionListener="#{broadcastEngine.startLive}" value="Go Live"
+                         disabled="#{broadcastEngine.running}" ariaLabel="broadcast" icon="pi pi-wifi"
+                         class="ui-button-flat ui-button-warning" update="@form #{detailContentId}"
+                         oncomplete="startMonitor()" />
+
+        <p:commandButton actionListener="#{broadcastEngine.stop}"
+                         disabled="#{!broadcastEngine.running or broadcastEngine.paused}" ariaLabel="stop" icon="pi pi-stop"
+                         class="ui-button-flat" update="@form #{detailContentId}" onstart="stopMonitor();PF('playerPoll').stop()" />
+
+        <p:commandButton actionListener="#{broadcastEngine.pause}" rendered="#{broadcastEngine.mode == 'PLAYLIST'}"
+                         disabled="#{!broadcastEngine.running or broadcastEngine.paused}" icon="pi pi-pause" class="ui-button-flat"
+                         update="@form #{detailContentId}" onstart="document.getElementById('audio-monitor').pause();PF('playerPoll').stop()" />
+
+        <!-- Monitor Mute Toggle -->
+        <p:commandButton type="button" icon="pi pi-volume-up" class="ui-button-flat ui-button-secondary"
+                         onclick="toggleMute(this)" title="Monitor Audio" style="margin-left: 10px;" />
+    </ui:define>
+
+    <ui:define name="detail-exporter" />
+
+    <ui:define name="detail">
+        <h:form id="detail-frm">
+            <p:panel header="🔴 Konfigurasi Live Stream" style="margin-bottom: 20px;"
+                     rendered="#{broadcastEngine.running and broadcastEngine.mode == 'LIVE'}">
+                <div class="field grid">
+                    <h:outputLabel value="RTMP Server:" styleClass="col-12 mb-2 md:col-2 md:mb-0"
+                                   style="font-weight:bold" />
+                    <div class="col-12 md:col-10">
+                        <h:outputText value="rtmp://#{request.serverName}:1935/live"
+                                      style="font-family: monospace; font-size: 1.2em;" />
+                    </div>
+                </div>
+                <div class="field grid">
+                    <h:outputLabel value="Stream Key:" styleClass="col-12 mb-2 md:col-2 md:mb-0"
+                                   style="font-weight:bold" />
+                    <div class="col-12 md:col-10">
+                        <h:outputText value="s3cr3t57" style="font-family: monospace; font-size: 1.2em;" />
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <i class="pi pi-info-circle"></i> Masukkan konfigurasi di atas pada aplikasi OBS Stream.
+                </div>
+            </p:panel>
+        </h:form>
+
+        <div style="border: 1px solid #ccc; padding: 10px; background: #f9f9f9; position: relative;">
+            <canvas id="visualizer" width="900" height="150"
+                    style="width: 100%; border-bottom: 1px solid #ddd; background: #000;">
+            </canvas>
+
+            <div id="play-overlay" onclick="resumeAudioContext()" style="position: absolute; top: 10px; left: 10px; right: 10px; height: 150px;
+                 display: none; align-items: center; justify-content: center;
+                 background: rgba(0,0,0,0.4); cursor: pointer; z-index: 10;">
+                <div style="text-align: center; color: white;">
+                    <i class="pi pi-play" style="font-size: 3rem; margin-bottom: 10px; display: block;"></i>
+                    <span style="font-weight: bold; font-family: sans-serif;">Klik untuk mengaktifkan visualisasi audio</span>
+                </div>
+            </div>
+
+
+            <div style="margin-top: 20px; width: 50%; margin-left: auto; margin-right: auto; padding-bottom: 10px;">
+                <div style="margin-bottom: 5px; font-weight: bold; text-align: center;">Volume Lineout</div>
+                <h:form>
+                    <h:inputHidden id="volumeInput" value="#{broadcastEngine.volume}" />
+                    <p:slider for="volumeInput" minValue="0" maxValue="100">
+                        <p:ajax event="slideEnd" process="volumeInput" />
+                    </p:slider>
+                </h:form>
+            </div>
+
+            <audio id="audio-monitor" crossorigin="anonymous" style="display: none;">
+                <source src="#{request.contextPath}/radio.mp3" type="audio/mpeg" />
+            </audio>
+        </div>
+        <script>
+            //<![CDATA[
+            let audioCtx;
+            let analyser;
+            let source;
+            let gainNode;
+            let animationId;
+
+            function startMonitor() {
+                const audio = document.getElementById('audio-monitor');
+
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    analyser = audioCtx.createAnalyser();
+                    analyser.fftSize = 256;
+
+                    gainNode = audioCtx.createGain();
+                    gainNode.gain.value = 1.0;
+
+                    source = audioCtx.createMediaElementSource(audio);
+                    source.connect(analyser);
+                    analyser.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+
+                    draw();
+                }
+
+                if (audioCtx.state === 'suspended') {
+                    showOverlay();
+                }
+
+                // Force reload to get fresh stream
+                audio.load();
+                audio.play()
+                        .then(() => {
+                            if (audioCtx.state === 'running') {
+                                hideOverlay();
+                            } else {
+                                // If still suspended, try to resume, but show overlay on failure/timeout
+                                audioCtx.resume().then(() => {
+                                    hideOverlay();
+                                }).catch(() => {
+                                    showOverlay();
+                                });
+                            }
+                        })
+                        .catch(e => {
+                            console.log("Playback failed (Autoplay blocked):", e);
+                            showOverlay();
+                        });
+            }
+
+            function showOverlay() {
+                document.getElementById('play-overlay').style.display = 'flex';
+            }
+
+            function hideOverlay() {
+                document.getElementById('play-overlay').style.display = 'none';
+            }
+
+            function resumeAudioContext() {
+                if (audioCtx) {
+                    audioCtx.resume().then(() => {
+                        console.log("AudioContext resumed by overlay click");
+                        hideOverlay();
+                        const audio = document.getElementById('audio-monitor');
+                        if (audio.paused) {
+                            audio.play().catch(e => console.log("Play retry failed:", e));
+                        }
+                    });
+                }
+            }
+
+            function stopMonitor() {
+                const audio = document.getElementById('audio-monitor');
+                audio.pause();
+                hideOverlay();
+
+                // Clear canvas
+                const canvas = document.getElementById('visualizer');
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = 'rgb(0, 0, 0)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+
+            function toggleMute(btn) {
+                if (!gainNode)
+                    return;
+
+                // Find icon span (PrimeFaces buttons have icon in a span)
+                // In PF 10+, icons are usually .ui-button-icon-left or .ui-icon depending on theme
+                let icon = $(btn).find('.ui-button-icon-left');
+                if (icon.length === 0) {
+                    icon = $(btn).find('.ui-icon');
+                }
+
+                if (gainNode.gain.value > 0) {
+                    gainNode.gain.value = 0;
+                    // Muted -> Show Volume Off icon
+                    icon.removeClass('pi-volume-up').addClass('pi-volume-off');
+                } else {
+                    gainNode.gain.value = 1.0;
+                    // Unmuted -> Show Volume Up icon
+                    icon.removeClass('pi-volume-off').addClass('pi-volume-up');
+                }
+            }
+
+            function draw() {
+                const canvas = document.getElementById('visualizer');
+                if (!canvas)
+                    return;
+                const ctx = canvas.getContext('2d');
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+
+                requestAnimationFrame(draw);
+
+                analyser.getByteFrequencyData(dataArray);
+
+                ctx.fillStyle = 'rgb(0, 0, 0)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const barWidth = (canvas.width / bufferLength) * 2.5;
+                let barHeight;
+                let x = 0;
+
+                for (let i = 0; i < bufferLength; i++) {
+                    barHeight = dataArray[i] / 2;
+
+                    const r = barHeight + (25 * (i / bufferLength));
+                    const g = 250 * (i / bufferLength);
+                    const b = 50;
+
+                    ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
+                    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+
+                    x += barWidth + 1;
+                }
+            }
+            // Auto-start if broadcast is running
+            window.onload = function () {
+                var isRunning = "#{broadcastEngine.running}";
+                if (isRunning === "true") {
+                    console.log("Broadcast active, attempting to start monitor...");
+                    startMonitor();
+                }
+            };
+
+            // Global interaction handler to resume AudioContext if blocked
+            document.addEventListener('click', function () {
+                if (typeof audioCtx !== 'undefined' && audioCtx.state === 'suspended') {
+                    resumeAudioContext();
+                }
+            }, {once: false}); // Keep listener to handle re-suspensions if any
+            //]]>
+        </script>
+    </ui:define>
+
+
+</ui:composition>

@@ -24,10 +24,12 @@ import id.my.mdn.kupu.core.base.view.annotation.SelectProcessor;
 import id.my.mdn.kupu.core.base.view.util.Backstack;
 import id.my.mdn.kupu.core.base.view.util.ConverterUtil;
 import id.my.mdn.kupu.core.base.view.widget.IBookmarkable;
+import id.my.mdn.kupu.core.config.view.ConfigPage;
 import id.my.mdn.kupu.core.security.util.RolesChecker;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.faces.convert.Converter;
+import jakarta.faces.event.ActionEvent;
 import jakarta.faces.event.ComponentSystemEvent;
 import jakarta.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
@@ -222,6 +224,10 @@ public abstract class Page implements IBookmarkable {
         updateUrl();
         pushUrlToBackstack();
         return RequestUtil.requestView(clsPage);
+    }
+
+    public void gotoConfigs(ActionEvent evt) {
+        gotoChild(ConfigPage.class).open();
     }
 
     protected RequestedView gotoChildNoPush(Class<? extends Page> clsPage) {

@@ -24,7 +24,7 @@ public class UstadzConverter implements Converter<Ustadz> {
 
     @Override
     public Ustadz getAsObject(FacesContext context, UIComponent component, String value) {
-        return value != null ? dao.find(Long.parseLong(value)) : null;
+        return value != null ? dao.find(Long.valueOf(value)) : null;
     }
 
     @Override

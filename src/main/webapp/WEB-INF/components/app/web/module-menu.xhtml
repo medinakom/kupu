@@ -3,11 +3,16 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:h="jakarta.faces.html">
 
+    <p:menuitem value="Daftar Ustadz" immediate="true"
+                actionListener="#{webNavigator.open('Ustadz', '')}"
+                icon="pi pi-users" /> 
+
     <p:menuitem value="Editor Kajian" immediate="true"
                 actionListener="#{webNavigator.open('Home', '')}"
                 icon="pi pi-video" /> 
-    <p:menuitem value="Konfigurasi" immediate="true"
-                actionListener="#{webNavigator.open('Konfigurasi', '')}"
-                icon="pi pi-cog" />
+
+    <p:menuitem value="Radio Station" immediate="true"
+                actionListener="#{webNavigator.open('Radio', '')}"
+                icon="pi pi-video" /> 
 </ui:composition>
 

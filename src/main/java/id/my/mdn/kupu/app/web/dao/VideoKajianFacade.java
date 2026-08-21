@@ -8,6 +8,7 @@ import id.my.mdn.kupu.app.web.model.VideoKajian;
 import id.my.mdn.kupu.core.base.dao.AbstractFacade;
 import id.my.mdn.kupu.core.base.util.FilterTypes;
 import id.my.mdn.kupu.core.base.util.FilterTypes.FilterData;
+import id.my.mdn.kupu.core.base.util.Result;
 import id.my.mdn.kupu.core.base.view.widget.SorterData;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -37,7 +38,6 @@ public class VideoKajianFacade extends AbstractFacade<VideoKajian> {
     @PersistenceContext(unitName = "KupuPersistenceUnit")
     private EntityManager em;
 
-
     public VideoKajianFacade() {
         super(VideoKajian.class);
     }
@@ -48,15 +48,15 @@ public class VideoKajianFacade extends AbstractFacade<VideoKajian> {
     }
 
     @Override
-    public List<VideoKajian> findAll(Integer startPosition, Integer maxResult, 
-            Map<String, Object> parameters, List<FilterTypes.FilterData> filters, 
-            List<SorterData> sorters, List<VideoKajian> defaultReturn, 
-            DefaultChecker defaultChecker) {        
+    public List<VideoKajian> findAll(Integer startPosition, Integer maxResult,
+            Map<String, Object> parameters, List<FilterTypes.FilterData> filters,
+            List<SorterData> sorters, List<VideoKajian> defaultReturn,
+            DefaultChecker defaultChecker) {
         return super.findAll(startPosition, maxResult, parameters, filters, sorters, Collections.<VideoKajian>emptyList(), defaultChecker);
     }
 
     @Override
-    public Long countAll(Map<String, Object> parameters, List<FilterTypes.FilterData> filters, Long defaultCount, DefaultChecker defaultChecker) {        
+    public Long countAll(Map<String, Object> parameters, List<FilterTypes.FilterData> filters, Long defaultCount, DefaultChecker defaultChecker) {
         return super.countAll(parameters, filters, 0L, defaultChecker);
     }
 
@@ -65,14 +65,17 @@ public class VideoKajianFacade extends AbstractFacade<VideoKajian> {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         switch (filterName) {
             case "kajian":
-                return cb.equal(from[0].get("kajian"), filterValue);
+                return filterValue != null ? cb.equal(from[0].get("kajian"), filterValue)
+                        : cb.isNull(from[0].get("kajian"));
             case "newest":
                 Subquery<LocalDateTime> sq = cq.subquery(LocalDateTime.class);
                 Root<VideoKajian> sqRoot = sq.from(VideoKajian.class);
                 sq.select(cb.greatest(sqRoot.<LocalDateTime>get("publishedDate")));
                 return cb.equal(from[0].get("publishedDate"), sq);
             case "published":
-                return cb.isTrue(from[0].get("published"));
+                boolean published = (boolean) filterValue;
+                return published ? cb.isTrue(from[0].get("published"))
+                        : cb.isFalse(from[0].get("published"));
             case "live":
                 return cb.isTrue((from[0].get("live")));
             default:
@@ -83,16 +86,12 @@ public class VideoKajianFacade extends AbstractFacade<VideoKajian> {
     @Override
     protected Expression orderExpression(String field, From... from) {
         return switch (field) {
-            case "eventTime" -> from[0].get("eventTime");
-            default -> super.orderExpression(field, from);
+            case "eventTime" ->
+                from[0].get("eventTime");
+            default ->
+                super.orderExpression(field, from);
         };
-        
-    }
 
-    @Override
-    protected List<Predicate> addStaticPredicates(List<Predicate> predicates, CriteriaQuery cq, From... from) {
-        predicates.add(getEntityManager().getCriteriaBuilder().isTrue(from[0].<Boolean>get("published")));
-        return predicates;
     }
 
     public VideoKajian findNewestVideo() {
@@ -127,45 +126,65 @@ public class VideoKajianFacade extends AbstractFacade<VideoKajian> {
     public VideoKajian getLive() {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<VideoKajian> cq = cb.createQuery(VideoKajian.class);
-        
+
         Root<VideoKajian> video = cq.from(VideoKajian.class);
-        
+
         cq.select(video).where(cb.isTrue(video.get("live")));
-        
+
         TypedQuery<VideoKajian> q = getEntityManager().createQuery(cq);
-        
+
         try {
             return q.getSingleResult();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             return null;
         }
     }
 
     public VideoKajian getPublicLive() {
-        
+
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<VideoKajian> cq = cb.createQuery(VideoKajian.class);
-        
+
         Root<VideoKajian> video = cq.from(VideoKajian.class);
-        
+
         cq.select(video).where(cb.isTrue(video.get("publicLive")));
-        
+
         TypedQuery<VideoKajian> q = getEntityManager().createQuery(cq);
-        
+
         try {
             return q.getSingleResult();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             return null;
         }
     }
-    
+
     public void incVisitorCount(String videoId) {
         VideoKajian video = find(videoId);
-        if(video != null) {
+        if (video != null) {
             video.setVisitorCount(video.getVisitorCount() + 1);
         }
         edit(video);
         em.flush();
+    }
+
+    @Override
+    public Result<String> create(VideoKajian entity) {
+        if (entity.isPublished()) {
+            entity.setPublishedDate(LocalDateTime.now());
+        } else {
+            entity.setPublishedDate(null);
+        }
+        return super.create(entity);
+    }
+
+    @Override
+    public Result<String> edit(VideoKajian entity) {
+        if (entity.isPublished()) {
+            entity.setPublishedDate(LocalDateTime.now());
+        } else {
+            entity.setPublishedDate(null);
+        }
+        return super.edit(entity);
     }
 
 }

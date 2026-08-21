@@ -402,9 +402,13 @@ public abstract class AbstractFacade<T> {
                 orders.add(order);
             }
         }
-
+        addStaticOrders(orders, from);
         cq.orderBy(orders);
 
+    }
+    
+    protected void addStaticOrders( List<Order> orders, From... from) {
+        
     }
 
     protected CriteriaQuery findQuery(Map<String, Object> parameters, List<FilterData> filters, List<SorterData> sorters) {

@@ -4,9 +4,10 @@
  */
 package id.my.mdn.kupu.app.web.view;
 
+import id.my.mdn.kupu.app.radio.view.RadioPage;
+import id.my.mdn.kupu.app.web.view.admin.UstadzPage;
 import id.my.mdn.kupu.core.base.view.Page;
 import id.my.mdn.kupu.core.base.view.widget.PageNavigator;
-import id.my.mdn.kupu.core.config.view.ConfigPage;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
@@ -22,7 +23,8 @@ public class WebNavigator extends PageNavigator implements Serializable {
     @Override
     protected Class<? extends Page> pageMap(String pageId) {
         return switch (pageId) {
-            case "Konfigurasi" -> ConfigPage.class;
+            case "Ustadz" -> UstadzPage.class;
+            case "Radio" -> RadioPage.class;
             default -> null;
         };
     }

@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/WEB-INF/templates/child-explorer.xhtml"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:c="jakarta.tags.core"
+                xmlns:pe="primefaces.extensions"
+                xmlns:p="primefaces">
+
+    <f:metadata>  
+        <ui:param name="primaryTitle" value="Kajian" /> 
+
+        <ui:param name="viewPage" value="#{kitabAdminPage}" /> 
+        <ui:include src="/WEB-INF/components/core/base/meta/page.xhtml"/>
+
+        <ui:param name="masterTitle" value="Kitab" />          
+        <ui:param name="master_notool" value="true" />       
+        <ui:param name="masterDataView" value="#{viewPage.kitabList}" />        
+        <ui:param name="masterContentId" value=":master-frm:#{masterDataView.name}" />         
+        <f:viewParam name="ms" value="#{masterDataView.selectionInternal}" converter="KitabConverter" transient="true" />
+
+        <ui:param name="masterFilter" value="#{masterDataView.filter}" />
+        <ui:param name="masterFilterType" value="overlay" />
+        <ui:param name="masterFilterUi" value="/WEB-INF/components/core/common/common-filterui.xhtml" /> 
+        <ui:include src="/WEB-INF/components/core/common/meta/common-filterui.xhtml" >
+            <ui:param name="filter" value="#{masterFilter}" />
+        </ui:include>
+        <ui:param name="masterPager" value="#{masterDataView.pager}" />
+        <f:viewParam name="mp" value="#{masterPager.pageSize}" converter="LongConverter" transient="true" />
+        <f:viewParam name="mo" value="#{masterPager.offset}" converter="LongConverter" transient="true" /> 
+
+        <ui:param name="detailTitle" value="Penampil Dokumen" />
+        <ui:param name="detail_notool" value="true" />
+        <ui:param name="detailContentId" value=":detail-frm" />
+
+        <f:viewParam name="kajian" value="#{viewPage.kajian}" converter="KajianConverter" transient="true" />
+
+        <ui:param name="secondaryTitle" value="#{viewPage.kajian.title}" />
+
+    </f:metadata>
+
+    <ui:define name="parent-nav">
+        <p:commandButton action="#{webNavigator.open('Home', '')}" class="ui-button-flat"
+                         immediate="true" ajax="false" icon="pi pi-home" />
+    </ui:define>
+
+    <ui:define name="module-menu">
+        <ui:include src="/WEB-INF/components/app/web/module-menu.xhtml" />
+    </ui:define>
+
+    <ui:define name="master-top-tools">
+
+    </ui:define>
+
+    <ui:define name="master">
+        <h:form id="master-frm">
+            <ui:decorate template="/WEB-INF/components/app/web/list/kitablist.xhtml" >
+                <ui:param name="dataView" value="#{masterDataView}" />                
+                <ui:param name="selectCallback" value="refreshMasterCasing();refreshDetail()" />
+                <ui:param name="updateCallback" value="refreshMaster(); refreshDetail()" />
+                <ui:param name="tableStyle" value="noheader" />
+            </ui:decorate>
+        </h:form>
+    </ui:define>
+    
+    <ui:define name="detail-exporter">
+        
+    </ui:define>
+
+    <ui:define name="detail-top-tools">
+        <p:commandButton icon="pi pi-upload" class="ui-button-flat" immediate="true"
+                         disabled="#{masterDataView.selected eq null}"
+                         oncomplete="PF('uploadDlg').show()" />
+    </ui:define>
+
+    <ui:define name="detail">
+        <h:form id="detail-frm" class="flex-grow-1 flex align-items-stretch">
+            <c:if test="#{(masterDataView.selection ne null) and (masterDataView.selection.content ne null)}">
+                <pe:documentViewer url="/api/videokajian/kitab/#{masterDataView.selection.id}"
+                                   zoom="page-width" style="border: none!important" />
+            </c:if>
+        </h:form>
+    </ui:define>
+    
+    
+
+    <ui:define name="detail-pager">
+        
+    </ui:define>
+
+    <ui:define name="dialogs">
+        <p:dialog id="upload-dlg" widgetVar="uploadDlg" dynamic="true" modal="true" closable="true" header="Upload Kitab">
+            <h:form enctype="multipart/form-data">
+                <p:fileUpload mode="advanced" accept="/(\.|\/)(pdf)$/"
+                              listener="#{viewPage.handleKitabUpload}"
+                              oncomplete="PF('uploadDlg').hide()"
+                              update="#{detailContentId}" />
+            </h:form>
+        </p:dialog>
+    </ui:define>
+
+
+</ui:composition>

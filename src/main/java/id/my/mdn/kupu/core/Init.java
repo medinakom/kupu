@@ -7,7 +7,6 @@ import id.my.mdn.kupu.core.base.util.ModuleInfo;
 import id.my.mdn.kupu.core.base.util.ModuleUtil;
 import id.my.mdn.kupu.core.config.dao.ConfigFacade;
 import id.my.mdn.kupu.core.local.service.TranslationFacade;
-import id.my.mdn.kupu.core.reporting.service.ReportingService;
 import id.my.mdn.kupu.core.security.service.SecurityService;
 import jakarta.enterprise.event.Event;
 import jakarta.faces.event.AbortProcessingException;
@@ -40,9 +39,6 @@ public class Init implements SystemEventListener {
     private TranslationFacade translationFacade;
     
     @Inject
-    private ReportingService reportingService;
-
-    @Inject
     @InitEvent
     Event<Object> appInitEvent;
     
@@ -73,17 +69,13 @@ public class Init implements SystemEventListener {
         ModuleUtil.inspectModules(
                 securityService::dumpSecurity,
                 this::dumpTranslations,
-                configFacade::dumpConfig,
-                reportingService::dumpTemplate
+                configFacade::dumpConfig
                 
         );
 
     }
 
     private void doPreDestroyApplication(/*@Observes @Destroyed(ApplicationScoped.class) Object payload*/) {
-        
-        
-
         Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             Driver driver = drivers.nextElement();

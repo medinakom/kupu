@@ -3,3 +3,8 @@
 /nbactions.xml
 /faces-config.NavData
 /target/
+*.log
+.vscode/
+client_secret.json
+
+
